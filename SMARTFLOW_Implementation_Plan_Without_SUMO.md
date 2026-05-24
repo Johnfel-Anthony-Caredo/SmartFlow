@@ -221,8 +221,6 @@ One of the strongest parts of SMARTFLOW is its scenario-based experimentation de
 - Traffic density level
 - Pedestrian density level
 - Emergency vehicle mode
-- Weather condition
-- Lane closure flag
 - Construction flag
 - Accident flag
 - Flooding flag
@@ -236,7 +234,6 @@ One of the strongest parts of SMARTFLOW is its scenario-based experimentation de
 | Traffic density | Increase vehicle spawn rate |
 | Pedestrian density | Increase pedestrian spawn rate |
 | Emergency vehicle | Spawn priority vehicles with urgency rules |
-| Rain/fog | Lower target speed and increase headway |
 | Lane closure | Disable one lane or reduce capacity |
 | Construction | Reduce speed on an approach and add blockage zone |
 | Accident | Block an edge partially or fully |
@@ -348,7 +345,7 @@ SQLite remains the most suitable data layer for this project because the system 
 ### Example minimum schema fields
 
 - `users`: id, username, email, password_hash, role, created_at
-- `scenarios`: id, name, traffic_density, pedestrian_density, emergency_mode, weather, lane_closure, accident, flooding, control_mode
+- `scenarios`: id, name, traffic_density, pedestrian_density, emergency_mode, lane_closure, accident, flooding, control_mode
 - `simulation_runs`: id, scenario_id, user_id, started_at, ended_at, status, control_mode, duration_seconds
 - `run_metrics`: id, run_id, avg_wait, avg_queue, max_queue, throughput, ped_delay, emergency_clearance, phase_efficiency
 

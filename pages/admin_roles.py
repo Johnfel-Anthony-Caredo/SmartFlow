@@ -78,26 +78,28 @@ def layout():
                 
                 # Admin (bypassed, always active)
                 html.Td(style={'textAlign': 'center'}, children=[
-                    dcc.Checkbox(value=True, disabled=True, className='checkbox')
+                    html.Input(type='checkbox', checked=True, disabled=True, className='checkbox')
                 ]),
                 
                 # Researcher (Checkable)
                 html.Td(style={'textAlign': 'center'}, children=[
-                    dcc.Checkbox(
+                    dcc.Checklist(
                         id={'type': 'perm-checkbox', 'index': f"2:{page}:{action}"},
-                        value=researcher_has_perm,
-                        className='checkbox'
+                        options=[{'label': '', 'value': 'enabled'}],
+                        value=['enabled'] if researcher_has_perm else [],
+                        className='checkbox',
+                        labelStyle={'display': 'none'}
                     )
                 ]),
                 
                 # Researcher Pending (Disabled, unchecked)
                 html.Td(style={'textAlign': 'center'}, children=[
-                    dcc.Checkbox(value=False, disabled=True, className='checkbox')
+                    html.Input(type='checkbox', checked=False, disabled=True, className='checkbox')
                 ]),
                 
                 # Disabled Role (Disabled, unchecked)
                 html.Td(style={'textAlign': 'center'}, children=[
-                    dcc.Checkbox(value=False, disabled=True, className='checkbox')
+                    html.Input(type='checkbox', checked=False, disabled=True, className='checkbox')
                 ])
             ])
         )

@@ -153,7 +153,7 @@ The current dashboard direction also reflects that local-application model throu
 
 The current UI prototype is a dark-mode SMARTFLOW dashboard implemented in Dash with a premium control-center style.[cite:2] It already includes a branded top header, sidebar navigation, system-status indicators, a simulation view area, metrics cards, charts, scenario settings, event logs, RL status panels, and simulation control buttons.[cite:2]
 
-The dashboard currently presents scenarios such as Tagum City intersections, a highway corridor, a school zone, and a custom four-way layout through a scenario dropdown, while also exposing controls for traffic density, pedestrian density, emergency vehicles, and weather conditions.[cite:2] The interface includes controls to start, pause, stop, and reset simulations, which aligns closely with the documented user flow in the project plan.[cite:1][cite:2]
+The dashboard currently presents scenarios such as Tagum City intersections, a highway corridor, a school zone, and a custom four-way layout through a scenario dropdown, while also exposing controls for traffic density, pedestrian density, and emergency vehicles.[cite:2] The interface includes controls to start, pause, stop, and reset simulations, which aligns closely with the documented user flow in the project plan.[cite:1][cite:2]
 
 ### Current UI capabilities seen in the prototype
 
@@ -163,7 +163,7 @@ The dashboard currently presents scenarios such as Tagum City intersections, a h
 - Trend charts for traffic flow and waiting time, currently populated with mock/randomized data in the present UI state.[cite:2]
 - Recent-events panel for signal changes, congestion warnings, pedestrian actions, and emergency events.[cite:2]
 - RL status panel showing agent details, training status, reward values, loss, and last action, also currently mock-driven in the present UI shell.[cite:2]
-- Scenario settings for density, emergency presence, and weather, plus simulation control buttons.[cite:2]
+- Scenario settings for density and emergency presence, plus simulation control buttons.[cite:2]
 
 ## Visualization Layer
 

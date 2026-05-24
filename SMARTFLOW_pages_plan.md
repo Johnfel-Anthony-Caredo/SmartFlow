@@ -187,7 +187,6 @@ Necessary sections:
 - Traffic density settings
 - Pedestrian density settings
 - Emergency vehicle settings
-- Weather condition settings
 - Lane closure toggle / configuration
 - Road construction toggle / configuration
 - Accident / blockage toggle / configuration
@@ -459,7 +458,6 @@ Recommended fields:
 - traffic_density
 - pedestrian_density
 - emergency_mode
-- weather_condition
 - lane_closure_config
 - construction_config
 - accident_config

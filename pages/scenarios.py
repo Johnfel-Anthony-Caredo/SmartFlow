@@ -129,23 +129,6 @@ def layout():
                                                                     ),
                                                                 ]
                                                             ),
-                                                            
-                                                            html.Div(
-                                                                className='form-group',
-                                                                children=[
-                                                                    html.Label(children='Weather'),
-                                                                    create_dropdown(
-                                                                        id='weather',
-                                                                        options=[
-                                                                            {'label': 'Clear', 'value': 'Clear'},
-                                                                            {'label': 'Rainy', 'value': 'Rainy'},
-                                                                            {'label': 'Partly Cloudy', 'value': 'Partly Cloudy'},
-                                                                            {'label': 'Night', 'value': 'Night'},
-                                                                        ],
-                                                                        value='Clear'
-                                                                    ),
-                                                                ]
-                                                            ),
                                                         ]
                                                     ),
                                                     
@@ -314,7 +297,7 @@ def update_scenarios_list(selected_id, _alert):
                 children=[
                     html.Div(className='scenario-name', style={'fontWeight': '600'}, children=s['name']),
                     html.Div(className='scenario-meta', style={'fontSize': '12px', 'color': '#64748b'},
-                             children=f"{s['traffic_density']} Density, {s['weather_condition']}")
+                             children=f"{s['traffic_density']} Density")
                 ]
             )
         )
@@ -325,7 +308,6 @@ def update_scenarios_list(selected_id, _alert):
     [Output('scenario-name', 'value'),
      Output('scenario-description', 'value'),
      Output('traffic-density', 'value'),
-     Output('weather', 'value'),
      Output('pedestrian-activity', 'value'),
      Output('emergency-mode', 'value'),
      Output('lane-closure-config', 'value'),
@@ -337,11 +319,11 @@ def update_scenarios_list(selected_id, _alert):
 )
 def load_scenario(scenario_id):
     if scenario_id is None:
-        return 'New Scenario', '', 'Medium', 'Clear', 'Medium', 'Disabled', '{}', '{}', '{}', '{}', '{}'
+        return 'New Scenario', '', 'Medium', 'Medium', 'Disabled', '{}', '{}', '{}', '{}', '{}'
         
     s = database.get_scenario_by_id(scenario_id)
     if not s:
-        return 'New Scenario', '', 'Medium', 'Clear', 'Medium', 'Disabled', '{}', '{}', '{}', '{}', '{}'
+        return 'New Scenario', '', 'Medium', 'Medium', 'Disabled', '{}', '{}', '{}', '{}', '{}'
         
     # Fetch constraints
     constraints = database.get_scenario_constraints(scenario_id)
@@ -355,7 +337,6 @@ def load_scenario(scenario_id):
         s['name'],
         s['description'] or '',
         s['traffic_density'],
-        s['weather_condition'],
         s['pedestrian_density'] or 'Medium',
         s['emergency_mode'] or 'Disabled',
         s['lane_closure_config'] or '{}',
@@ -397,7 +378,6 @@ def handle_scenario_selection(new_clicks, item_clicks, current_id):
      State('scenario-name', 'value'),
      State('scenario-description', 'value'),
      State('traffic-density', 'value'),
-     State('weather', 'value'),
      State('pedestrian-activity', 'value'),
      State('emergency-mode', 'value'),
      State('lane-closure-config', 'value'),
@@ -407,7 +387,7 @@ def handle_scenario_selection(new_clicks, item_clicks, current_id):
      State('constraints-config', 'value')],
     prevent_initial_call=True
 )
-def handle_save_delete(save_clicks, delete_clicks, selected_id, name, desc, density, weather, pedestrian, emergency,
+def handle_save_delete(save_clicks, delete_clicks, selected_id, name, desc, density, pedestrian, emergency,
                         lane_closure_config, construction_config, accident_config, flooding_config, constraints_config):
     triggered_id = ctx.triggered_id
     
@@ -494,7 +474,6 @@ def handle_save_delete(save_clicks, delete_clicks, selected_id, name, desc, dens
                 traffic_density=density,
                 pedestrian_density=pedestrian,
                 emergency_mode=emergency,
-                weather_condition=weather,
                 lane_closure_config=json.dumps(parsed_lane),
                 construction_config=json.dumps(parsed_const),
                 accident_config=json.dumps(parsed_acc),
@@ -523,7 +502,6 @@ def handle_save_delete(save_clicks, delete_clicks, selected_id, name, desc, dens
                 traffic_density=density,
                 pedestrian_density=pedestrian,
                 emergency_mode=emergency,
-                weather_condition=weather,
                 lane_closure_config=json.dumps(parsed_lane),
                 construction_config=json.dumps(parsed_const),
                 accident_config=json.dumps(parsed_acc),

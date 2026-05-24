@@ -35,15 +35,24 @@ def create_kpi_card(icon, title, value, color='#00e676', id=None):
     )
 
 
-def create_section(title, children, icon=None, className=''):
-    header = [html.H3(className='section-title', children=title)]
+def create_section(title, children, icon=None, subtitle=None, className=''):
+    header_children = []
     if icon:
-        header.insert(0, html.I(className=icon))
+        header_children.append(html.I(className=icon))
+    
+    title_children = title
+    if subtitle:
+        title_children = [
+            html.Span(title, className='section-title-text'),
+            html.Small(subtitle, className='section-subtitle')
+        ]
+    
+    header_children.append(html.H3(className='section-title', children=title_children))
     
     return html.Div(
         className=f'section {className}'.strip(),
         children=[
-            html.Div(className='section-header', children=header),
+            html.Div(className='section-header', children=header_children),
             html.Div(className='section-content', children=children),
         ]
     )
@@ -54,13 +63,14 @@ def create_button(text, id=None, className='btn', icon=None, disabled=False):
     if icon:
         children.append(html.I(className=icon))
     children.append(html.Span(children=text))
-    
-    return html.Button(
-        id=id,
-        className=className,
-        disabled=disabled,
-        children=children
-    )
+
+    props = {'className': className, 'disabled': disabled}
+    if id is not None:
+        props['id'] = id
+    if not children:
+        children = text
+
+    return html.Button(children=children, **props)
 
 
 def create_input(id, type='text', placeholder='', value='', className='input-field'):
@@ -221,5 +231,23 @@ def create_empty_state(message, icon='fas fa-inbox'):
         children=[
             html.I(className=icon),
             html.P(children=message)
+        ]
+    )
+
+
+def create_mini_stat(label, value, icon=None, color='var(--accent)', id=None):
+    """Compact stat chip for admin KPI summary rows."""
+    props = {'className': 'mini-stat'}
+    if id is not None:
+        props['id'] = id
+    return html.Div(
+        **props,
+        children=[
+            html.Div(className='mini-stat-icon', style={'color': color},
+                     children=[html.I(className=icon)] if icon else []),
+            html.Div(className='mini-stat-content', children=[
+                html.Span(value, className='mini-stat-value'),
+                html.Span(label, className='mini-stat-label'),
+            ]),
         ]
     )

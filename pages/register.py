@@ -82,35 +82,39 @@ def layout():
                             ),
                             
                             html.Div(
-                                className='form-group',
+                                className='form-row',
                                 children=[
-                                    html.Label(
-                                        htmlFor='reg-password-input',
-                                        children='Password'
+                                    html.Div(
+                                        className='form-group',
+                                        children=[
+                                            html.Label(
+                                                htmlFor='reg-password-input',
+                                                children='Password'
+                                            ),
+                                            dcc.Input(
+                                                id='reg-password-input',
+                                                type='password',
+                                                placeholder='Create a password',
+                                                className='input-field',
+                                                autoComplete='new-password'
+                                            ),
+                                        ]
                                     ),
-                                    dcc.Input(
-                                        id='reg-password-input',
-                                        type='password',
-                                        placeholder='Create a password',
-                                        className='input-field',
-                                        autoComplete='new-password'
-                                    ),
-                                ]
-                            ),
-                            
-                            html.Div(
-                                className='form-group',
-                                children=[
-                                    html.Label(
-                                        htmlFor='reg-confirm-input',
-                                        children='Confirm Password'
-                                    ),
-                                    dcc.Input(
-                                        id='reg-confirm-input',
-                                        type='password',
-                                        placeholder='Confirm your password',
-                                        className='input-field',
-                                        autoComplete='new-password'
+                                    html.Div(
+                                        className='form-group',
+                                        children=[
+                                            html.Label(
+                                                htmlFor='reg-confirm-input',
+                                                children='Confirm Password'
+                                            ),
+                                            dcc.Input(
+                                                id='reg-confirm-input',
+                                                type='password',
+                                                placeholder='Confirm your password',
+                                                className='input-field',
+                                                autoComplete='new-password'
+                                            ),
+                                        ]
                                     ),
                                 ]
                             ),
@@ -120,7 +124,7 @@ def layout():
                                 children=[
                                     html.Label(
                                         htmlFor='email-input',
-                                        children='Email (Optional)'
+                                        children='Email'
                                     ),
                                     dcc.Input(
                                         id='email-input',
@@ -175,32 +179,45 @@ def handle_register(n_clicks, fullname, username, password, confirm, email):
     if not n_clicks:
         return '', 'alert alert-error hidden', '', 'alert alert-success hidden', None
     
+    # Validate required fields
     if not fullname or not username or not password or not confirm:
-        return 'All fields are required', 'alert alert-error', '', 'alert alert-success hidden', None
+        return 'Please fill in all required fields (full name, username, password).', 'alert alert-error', '', 'alert alert-success hidden', None
     
+    # Trim and validate username
+    username = username.strip()
+    if len(username) < 3:
+        return 'Username must be at least 3 characters.', 'alert alert-error', '', 'alert alert-success hidden', None
+    
+    if not username.replace('_', '').replace('-', '').isalnum():
+        return 'Username may only contain letters, numbers, underscores, and hyphens.', 'alert alert-error', '', 'alert alert-success hidden', None
+    
+    # Password validation
     if password != confirm:
-        return 'Passwords do not match', 'alert alert-error', '', 'alert alert-success hidden', None
+        return 'Passwords do not match.', 'alert alert-error', '', 'alert alert-success hidden', None
     
     password_errors = auth.validate_password_strength(password)
     if password_errors:
         return password_errors[0], 'alert alert-error', '', 'alert alert-success hidden', None
     
-    existing_user = database.get_user_by_username(username)
-    if existing_user:
-        return 'Username already exists', 'alert alert-error', '', 'alert alert-success hidden', None
+    # Check uniqueness
+    if database.get_user_by_username(username):
+        return 'This username is already taken. Please choose another.', 'alert alert-error', '', 'alert alert-success hidden', None
     
-    if email:
-        existing_email = database.get_user_by_email(email)
-        if existing_email:
-            return 'Email already registered', 'alert alert-error', '', 'alert alert-success hidden', None
+    if email and database.get_user_by_email(email.strip()):
+        return 'This email address is already registered.', 'alert alert-error', '', 'alert alert-success hidden', None
     
     try:
+        # Researcher pending role
+        pending_role = database.get_role_by_name('researcher_pending')
+        role_id = pending_role['id'] if pending_role else 3
+        
         password_hash = auth.hash_password(password)
         user_id = database.create_user(
-            full_name=fullname,
+            full_name=fullname.strip(),
             username=username,
-            email=email or '',
+            email=email.strip() if email else '',
             password_hash=password_hash,
+            role_id=role_id,
             status='pending'
         )
         
@@ -208,10 +225,10 @@ def handle_register(n_clicks, fullname, username, password, confirm, email):
             user_id=user_id,
             action='register',
             target='auth',
-            details=f'New user registered: {username}'
+            details=f"New user registered: '{username}' ({fullname}) — awaiting admin approval"
         )
         
-        return '', 'alert alert-error hidden', 'Account created successfully! Redirecting to login...', 'alert alert-success', '/login'
+        return '', 'alert alert-error hidden', 'Account created successfully. Your registration is pending administrator approval. Once approved, you will be able to log in.', 'alert alert-success', '/login'
     
     except Exception as e:
-        return f'Registration failed: {str(e)}', 'alert alert-error', '', 'alert alert-success hidden', None
+        return f"Registration failed. Please try again or contact the administrator.", 'alert alert-error', '', 'alert alert-success hidden', None

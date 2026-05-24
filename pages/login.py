@@ -4,9 +4,7 @@ User authentication with username/password.
 """
 
 from dash import html, dcc, callback, Input, Output, State
-from flask import session
 import auth
-import database
 
 
 def layout():
@@ -77,20 +75,6 @@ def layout():
                                 ]
                             ),
                             
-                            html.Div(
-                                className='form-group checkbox-group',
-                                children=[
-                                    dcc.Checklist(
-                                        id='remember-me',
-                                        options=[
-                                            {'label': ' Remember me', 'value': 'remember'}
-                                        ],
-                                        value=[],
-                                        className='checkbox'
-                                    ),
-                                ]
-                            ),
-                            
                             html.Button(
                                 id='login-btn',
                                 className='btn btn-primary btn-full',
@@ -122,34 +106,33 @@ def layout():
      Output('login-redirect', 'pathname')],
     Input('login-btn', 'n_clicks'),
     [State('username-input', 'value'),
-     State('password-input', 'value'),
-     State('remember-me', 'value')],
+     State('password-input', 'value')],
     prevent_initial_call=True
 )
-def handle_login(n_clicks, username, password, remember_me):
+def handle_login(n_clicks, username, password):
     if not n_clicks:
         return '', 'alert alert-error hidden', None
     
     if not username or not password:
-        return 'Please enter both username and password', 'alert alert-error', None
+        return 'Please enter both username and password.', 'alert alert-error', None
     
-    user = auth.authenticate(username, password)
+    user, reason = auth.authenticate(username, password)
     
-    if not user:
-        database.log_audit_event(
-            user_id=None,
-            action='login_failed',
-            target='auth',
-            details=f'Failed login attempt for username: {username}'
-        )
-        return 'Invalid username or password', 'alert alert-error', None
+    if reason == 'locked':
+        return 'Too many failed attempts. Please wait a few minutes and try again.', 'alert alert-error', None
     
-    if user['status'] != 'active':
-        return 'Your account is not active. Please contact an administrator.', 'alert alert-error', None
+    if reason == 'pending':
+        return 'Your account is pending administrator approval. You will be able to log in once an admin activates your account.', 'alert alert-warning', None
+    
+    if reason == 'disabled':
+        return 'Your account has been disabled. Please contact the system administrator.', 'alert alert-error', None
+    
+    if reason == 'invalid' or not user:
+        return 'Invalid username or password. Please check your credentials and try again.', 'alert alert-error', None
     
     auth.create_session(user)
     
-    if remember_me and 'remember' in remember_me:
-        session.permanent = True
+    if user.get('must_change_password'):
+        return '', 'alert alert-error hidden', '/change-password'
     
     return '', 'alert alert-error hidden', '/dashboard'

@@ -366,13 +366,6 @@ def create_simulation_view() -> html.Div:
                     html.Div('Tagum City — Pioneer Ave & Apokon Rd',
                              className='overlay-value'),
                 ]),
-                html.Div(className='sim-overlay overlay-top-right', children=[
-                    html.Div('Weather', className='overlay-label'),
-                    html.Div(className='overlay-value', children=[
-                        html.I(className='fa-solid fa-cloud-sun'),
-                        ' Partly Cloudy, 31°C',
-                    ]),
-                ]),
                 html.Div(className='sim-overlay overlay-bottom-left', children=[
                     html.Div('Signal Phase', className='overlay-label'),
                     html.Div(className='overlay-value phase-green', children=[
@@ -521,23 +514,6 @@ def create_control_panel() -> html.Div:
                          'value': 'Enabled (2 Vehicles)'},
                     ],
                     value='Enabled (1 Ambulance)',
-                    clearable=False,
-                    searchable=False,
-                    className='dash-dropdown dropdown-small setting-dropdown',
-                ),
-            ]),
-            # Weather Condition
-            html.Div(className='setting-group', children=[
-                html.Label('Weather Condition', className='setting-label'),
-                dcc.Dropdown(
-                    id='weather-dropdown',
-                    options=[
-                        {'label': 'Clear',         'value': 'Clear'},
-                        {'label': 'Partly Cloudy', 'value': 'Partly Cloudy'},
-                        {'label': 'Rainy',         'value': 'Rainy'},
-                        {'label': 'Night',         'value': 'Night'},
-                    ],
-                    value='Partly Cloudy',
                     clearable=False,
                     searchable=False,
                     className='dash-dropdown dropdown-small setting-dropdown',

@@ -6,7 +6,7 @@ All schema definitions, CRUD operations, and seed data.
 import sqlite3
 import os
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from contextlib import contextmanager
 
 import config
@@ -53,7 +53,6 @@ CREATE TABLE IF NOT EXISTS users (
     role_id INTEGER NOT NULL DEFAULT 2,
     status TEXT NOT NULL DEFAULT 'active',
     must_change_password INTEGER NOT NULL DEFAULT 0,
-    institution TEXT,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now')),
     last_login_at TEXT,
@@ -94,7 +93,6 @@ CREATE TABLE IF NOT EXISTS scenarios (
     traffic_density TEXT DEFAULT 'Medium',
     pedestrian_density TEXT DEFAULT 'Medium',
     emergency_mode TEXT DEFAULT 'Disabled',
-    weather_condition TEXT DEFAULT 'Clear',
     lane_closure_config TEXT DEFAULT '{}',
     construction_config TEXT DEFAULT '{}',
     accident_config TEXT DEFAULT '{}',
@@ -235,17 +233,28 @@ def seed_data():
                 "INSERT INTO roles (name, description) VALUES (?, ?)", roles
             )
 
-        # Seed admin user if empty
+        # Seed users if empty
         cursor = conn.execute("SELECT COUNT(*) FROM users")
         if cursor.fetchone()[0] == 0:
             from auth import hash_password
             admin_hash = hash_password(config.DEFAULT_ADMIN_PASSWORD)
-            conn.execute(
+            user_hash = hash_password('Researcher2026!')
+
+            seed_users = [
+                ('System Administrator', 'admin',
+                 'admin@smartflow.local', admin_hash, 1, 'active', 1),
+                ('Lab Manager', 'admin2',
+                 'admin2@smartflow.local', admin_hash, 1, 'active', 1),
+                ('Juan dela Cruz', 'researcher',
+                 'researcher@smartflow.local', user_hash, 2, 'active', 0),
+                ('Maria Santos', 'researcher2',
+                 'researcher2@smartflow.local', user_hash, 2, 'active', 0),
+            ]
+            conn.executemany(
                 """INSERT INTO users (full_name, username, email, password_hash,
                    role_id, status, must_change_password)
                    VALUES (?, ?, ?, ?, ?, ?, ?)""",
-                ('System Administrator', config.DEFAULT_ADMIN_USERNAME,
-                 'admin@smartflow.local', admin_hash, 1, 'active', 1)
+                seed_users
             )
 
         # Seed system settings if empty
@@ -271,33 +280,29 @@ def seed_data():
             scenarios = [
                 ('Tagum City — Main Intersection',
                  'Primary high-volume intersection: Pioneer Ave & Apokon Rd',
-                 'High', 'Medium', 'Disabled', 'Clear',
+                 'High', 'Medium', 'Disabled',
                  '{}', '{}', '{}', '{}', None, 1, 0),
                 ('Tagum City — Secondary Route',
                  'Secondary route with moderate traffic volume',
-                 'Medium', 'Low', 'Disabled', 'Clear',
+                 'Medium', 'Low', 'Disabled',
                  '{}', '{}', '{}', '{}', None, 1, 0),
                 ('Emergency Vehicle Scenario',
                  'High traffic with active emergency vehicle priority',
-                 'Very High', 'Medium', 'Enabled (1 Ambulance)', 'Clear',
-                 '{}', '{}', '{}', '{}', None, 1, 0),
-                ('Rainy Day — Heavy Congestion',
-                 'Rainy conditions with heavy traffic and pedestrian demand',
-                 'Very High', 'High', 'Disabled', 'Rainy',
+                 'Very High', 'Medium', 'Enabled (1 Ambulance)',
                  '{}', '{}', '{}', '{}', None, 1, 0),
                 ('Lane Closure — Construction',
                  'Moderate traffic with lane closure due to road construction',
-                 'Medium', 'Low', 'Disabled', 'Clear',
+                 'Medium', 'Low', 'Disabled',
                  '{"enabled": true, "approach": "north", "lanes_closed": 1}',
                  '{"enabled": true, "approach": "north", "speed_reduction": 0.5}',
                  '{}', '{}', None, 1, 0),
             ]
             conn.executemany(
                 """INSERT INTO scenarios (name, description, traffic_density,
-                   pedestrian_density, emergency_mode, weather_condition,
+                   pedestrian_density, emergency_mode,
                    lane_closure_config, construction_config, accident_config,
                    flooding_config, created_by, is_official, is_archived)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 scenarios
             )
 
@@ -427,14 +432,14 @@ def delete_expired_sessions():
 # ─── User CRUD ─────────────────────────────────────────────────────
 
 def create_user(full_name, username, email, password_hash, role_id=2,
-                status='active', must_change_password=0, institution=None):
+                status='active', must_change_password=0):
     with get_db() as conn:
         cursor = conn.execute(
             """INSERT INTO users (full_name, username, email, password_hash,
-               role_id, status, must_change_password, institution)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+               role_id, status, must_change_password)
+               VALUES (?, ?, ?, ?, ?, ?, ?)""",
             (full_name, username, email, password_hash, role_id, status,
-             must_change_password, institution)
+             must_change_password)
         )
         return cursor.lastrowid
 
@@ -518,7 +523,7 @@ def count_active_admins():
 
 def create_scenario(name, description='', traffic_density='Medium',
                     pedestrian_density='Medium', emergency_mode='Disabled',
-                    weather_condition='Clear', lane_closure_config='{}',
+                    lane_closure_config='{}',
                     construction_config='{}', accident_config='{}',
                     flooding_config='{}', created_by=None,
                     is_official=0, is_archived=0):
@@ -536,12 +541,12 @@ def create_scenario(name, description='', traffic_density='Medium',
     with get_db() as conn:
         cursor = conn.execute(
             """INSERT INTO scenarios (name, description, traffic_density,
-               pedestrian_density, emergency_mode, weather_condition,
+               pedestrian_density, emergency_mode,
                lane_closure_config, construction_config, accident_config,
                flooding_config, created_by, is_official, is_archived)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (name, description, traffic_density, pedestrian_density,
-             emergency_mode, weather_condition, lane_closure_config,
+             emergency_mode, lane_closure_config,
              construction_config, accident_config, flooding_config,
              created_by, is_official, is_archived)
         )
@@ -925,3 +930,43 @@ def delete_backup_from_db(backup_id):
     file_path = os.path.join(backups_dir, filename)
     if os.path.exists(file_path):
         os.remove(file_path)
+
+
+# ─── Login Attempt Tracking ──────────────────────────────────────
+
+MAX_LOGIN_ATTEMPTS = 5
+LOGIN_LOCKOUT_SECONDS = 300
+
+def record_login_attempt(username: str, success: bool):
+    with get_db() as conn:
+        conn.execute(
+            """CREATE TABLE IF NOT EXISTS login_attempts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                timestamp TEXT DEFAULT (datetime('now')),
+                success INTEGER NOT NULL DEFAULT 0
+            )"""
+        )
+        conn.execute(
+            "INSERT INTO login_attempts (username, success) VALUES (?, ?)",
+            (username, 1 if success else 0)
+        )
+
+
+def is_login_blocked(username: str) -> bool:
+    with get_db() as conn:
+        conn.execute(
+            """CREATE TABLE IF NOT EXISTS login_attempts (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT NOT NULL,
+                timestamp TEXT DEFAULT (datetime('now')),
+                success INTEGER NOT NULL DEFAULT 0
+            )"""
+        )
+        cutoff = (datetime.now() - timedelta(seconds=LOGIN_LOCKOUT_SECONDS)).isoformat()
+        cursor = conn.execute(
+            "SELECT COUNT(*) FROM login_attempts WHERE username = ? AND success = 0 AND timestamp >= ?",
+            (username, cutoff)
+        )
+        failures = cursor.fetchone()[0]
+        return failures >= MAX_LOGIN_ATTEMPTS

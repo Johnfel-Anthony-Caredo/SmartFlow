@@ -72,10 +72,6 @@ def layout():
                                                     html.Strong('Email: '),
                                                     html.Span(user['email'] or 'None provided')
                                                 ]),
-                                                html.Div(style={'marginBottom': '10px'}, children=[
-                                                    html.Strong('Institution/Dept: '),
-                                                    html.Span(user['institution'] or 'N/A')
-                                                ]),
                                                 html.Div(style={'marginBottom': '15px'}, children=[
                                                     html.Strong('System Role: '),
                                                     html.Span(user['role_name'].upper(), className='status-badge status-active', style={'marginLeft': '5px'})

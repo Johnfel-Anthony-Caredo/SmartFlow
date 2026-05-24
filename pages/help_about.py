@@ -45,7 +45,7 @@ def layout():
                                                 html.P('SMARTFLOW is a local simulation-based traffic analysis and decision-support platform designed to evaluate AI-optimized traffic signals against traditional fixed-time controls.'),
                                                 html.H4('Quick Start Steps:'),
                                                 html.Ol(children=[
-                                                    html.Li('Navigate to the Scenarios tab to choose a preset or configure custom traffic/weather conditions.'),
+                                                    html.Li('Navigate to the Scenarios tab to choose a preset or configure custom traffic conditions.'),
                                                     html.Li('Go to the Simulation Control panel to select either Fixed-Time or AI Agent control modes.'),
                                                     html.Li('Click the Start button to execute the simulation in real time.'),
                                                     html.Li('Observe performance metrics (queue lengths, wait times) in the live telemetry grid and the Performance charts tab.'),
