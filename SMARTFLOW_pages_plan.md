@@ -15,7 +15,7 @@ This document defines the necessary pages, role-based navigation, authentication
 - User Management
 - Role & Access Control
 - Scenario Library Management
-- System Configuration
+
 - Database / Backup Tools
 - Audit Logs
 
@@ -72,7 +72,7 @@ Necessary pages:
 8. User Management
 9. Role & Access Control
 10. Scenario Library Admin
-11. System Configuration
+
 12. Audit Logs
 13. Backup & Restore
 14. Profile / Settings
@@ -302,7 +302,7 @@ Necessary sections:
 - Export preferences
 - Session info
 
-Admin-only settings should not be mixed here; put them in System Configuration.
+Admin-only settings should not be mixed here.
 
 ## 9) Help / About
 **Goal:** Explain the system and reduce user confusion.
@@ -361,34 +361,6 @@ Recommended base roles:
 - researcher
 - researcher_pending
 - disabled
-
-## 12) Scenario Library Admin
-**Goal:** Govern official presets and disruption templates.
-
-Necessary sections:
-- Approved scenario presets
-- Official baseline scenarios
-- Default training/evaluation scenarios
-- Constraint templates
-- Publish / unpublish scenario
-- Archive old presets
-- Preset ownership and version history
-
-## 13) System Configuration
-**Goal:** Central admin settings for the platform.
-
-Necessary sections:
-- SQLite database path/config info
-- Simulation engine paths
-- SUMO / TraCI configuration fields
-- Model/checkpoint directories
-- Export directories
-- Default run settings
-- Session timeout
-- Registration mode (open, approval-only, closed)
-- Password policy settings
-- Logging level
-- Maintenance mode toggle
 
 ## 14) Audit Logs
 **Goal:** Trace sensitive actions.
@@ -517,7 +489,7 @@ Recommended fields:
 | User Management | No | Yes |
 | Role & Access Control | No | Yes |
 | Scenario Library Admin | No | Yes |
-| System Configuration | No | Yes |
+
 | Audit Logs | No | Yes |
 | Backup & Restore | No | Yes |
 
@@ -550,7 +522,7 @@ Recommended fields:
 - Role & Access Control
 - Scenario Library Admin
 - Audit Logs
-- System Configuration
+
 - Backup & Restore
 
 ### Phase 5 - Polish
@@ -586,7 +558,7 @@ Recommended fields:
 - User Management
 - Role & Access Control
 - Scenario Library Admin
-- System Configuration
+
 - Audit Logs
 - Backup & Restore
 - Profile / Settings

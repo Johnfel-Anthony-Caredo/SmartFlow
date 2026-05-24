@@ -22,3 +22,5 @@ APP_TAGLINE = 'AI-Driven Traffic Simulation & Decision Support'
 REGISTRATION_MODE = 'approval-only'
 
 MIN_PASSWORD_LENGTH = 8
+
+LOGGING_LEVEL = 'INFO'

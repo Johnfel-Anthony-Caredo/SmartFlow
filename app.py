@@ -13,8 +13,8 @@ import auth
 
 from pages import login, register, dashboard, simulation, scenarios
 from pages import live_traffic, performance, ai_agent, runs_reports
-from pages import change_password, admin_users, admin_roles, admin_scenarios
-from pages import admin_config, admin_audit, admin_backups
+from pages import change_password, admin_users, admin_roles
+from pages import admin_audit, admin_backups
 from pages import profile_settings, help_about
 
 
@@ -60,8 +60,7 @@ PAGE_ROUTES = {
 ADMIN_PAGE_ROUTES = {
     '/admin/users':     ('admin-users', admin_users),
     '/admin/roles':     ('admin-roles', admin_roles),
-    '/admin/scenarios': ('admin-scenarios', admin_scenarios),
-    '/admin/config':    ('admin-config', admin_config),
+
     '/admin/audit':     ('admin-audit', admin_audit),
     '/admin/backups':   ('admin-backups', admin_backups),
 }

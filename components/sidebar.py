@@ -51,8 +51,6 @@ def create_sidebar():
     admin_nav = [
         {'id': 'user-management','label': 'User Management',       'icon': 'fas fa-users',          'href': '/admin/users'},
         {'id': 'role-access',    'label': 'Role & Access Control', 'icon': 'fas fa-shield-alt',     'href': '/admin/roles'},
-        {'id': 'scenario-library','label': 'Scenario Library',     'icon': 'fas fa-book',           'href': '/admin/scenarios'},
-        {'id': 'system-config',  'label': 'System Config',         'icon': 'fas fa-cogs',           'href': '/admin/config'},
         {'id': 'audit-logs',     'label': 'Audit Logs',            'icon': 'fas fa-clipboard-list',  'href': '/admin/audit'},
         {'id': 'backup-restore', 'label': 'Backup & Restore',      'icon': 'fas fa-database',       'href': '/admin/backups'},
     ]

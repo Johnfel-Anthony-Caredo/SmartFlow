@@ -370,6 +370,14 @@ def get_user_by_email(email):
         return dict(row) if row else None
 
 
+def list_roles():
+    with get_db() as conn:
+        cursor = conn.execute(
+            "SELECT id, name, description FROM roles ORDER BY id"
+        )
+        return [dict(row) for row in cursor.fetchall()]
+
+
 def get_permissions_for_role(role_id):
     with get_db() as conn:
         cursor = conn.execute(
@@ -836,6 +844,31 @@ def delete_scenario_constraints(scenario_id):
 def delete_run(run_id):
     with get_db() as conn:
         conn.execute("DELETE FROM simulation_runs WHERE id = ?", (run_id,))
+
+
+def count_user_runs(user_id):
+    """Return total simulation runs created by a user."""
+    with get_db() as conn:
+        cursor = conn.execute(
+            "SELECT COUNT(*) FROM simulation_runs WHERE user_id = ?",
+            (user_id,)
+        )
+        return cursor.fetchone()[0]
+
+
+def get_user_activity_summary(user_id):
+    """Return quick stats about a user's activity."""
+    with get_db() as conn:
+        run_count = conn.execute(
+            "SELECT COUNT(*) FROM simulation_runs WHERE user_id = ?", (user_id,)
+        ).fetchone()[0]
+        audit_count = conn.execute(
+            "SELECT COUNT(*) FROM audit_logs WHERE user_id = ?", (user_id,)
+        ).fetchone()[0]
+        return {
+            'run_count': run_count,
+            'audit_count': audit_count,
+        }
 
 
 # ─── Dynamic Permissions CRUD ──────────────────────────────────────
