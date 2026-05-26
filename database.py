@@ -218,16 +218,30 @@ def init_db():
         conn.executescript(SCHEMA_SQL)
 
 
+
+
+def _migrate_roles():
+    """Migrate old role names (researcher -> user, remove researcher_pending/disabled)."""
+    with get_db() as conn:
+        cur = conn.execute("SELECT name FROM roles WHERE name = 'researcher'")
+        if cur.fetchone():
+            conn.execute(
+                "UPDATE roles SET name = 'user', description = 'Standard platform access' WHERE name = 'researcher'"
+            )
+            conn.execute("DELETE FROM roles WHERE name IN ('researcher_pending', 'disabled')")
+            conn.execute("UPDATE users SET role_id = 2 WHERE role_id IN (3, 4)")
+            conn.execute("UPDATE permissions SET role_id = 2 WHERE role_id IN (3, 4)")
+
+
 def seed_data():
+    _migrate_roles()
     with get_db() as conn:
         # Seed roles if empty
         cursor = conn.execute("SELECT COUNT(*) FROM roles")
         if cursor.fetchone()[0] == 0:
             roles = [
                 ('admin', 'Full platform access'),
-                ('researcher', 'Run experiments and view results'),
-                ('researcher_pending', 'Awaiting admin approval'),
-                ('disabled', 'Account disabled'),
+                ('user', 'Standard platform access'),
             ]
             conn.executemany(
                 "INSERT INTO roles (name, description) VALUES (?, ?)", roles
@@ -238,17 +252,15 @@ def seed_data():
         if cursor.fetchone()[0] == 0:
             from auth import hash_password
             admin_hash = hash_password(config.DEFAULT_ADMIN_PASSWORD)
-            user_hash = hash_password('Researcher2026!')
+            user_hash = hash_password('User2026!')
 
             seed_users = [
                 ('System Administrator', 'admin',
                  'admin@smartflow.local', admin_hash, 1, 'active', 1),
                 ('Lab Manager', 'admin2',
                  'admin2@smartflow.local', admin_hash, 1, 'active', 1),
-                ('Juan dela Cruz', 'researcher',
-                 'researcher@smartflow.local', user_hash, 2, 'active', 0),
-                ('Maria Santos', 'researcher2',
-                 'researcher2@smartflow.local', user_hash, 2, 'active', 0),
+                ('Juan dela Cruz', 'user',
+                 'user@smartflow.local', user_hash, 2, 'active', 0),
             ]
             conn.executemany(
                 """INSERT INTO users (full_name, username, email, password_hash,
@@ -316,7 +328,7 @@ def seed_data():
         cursor = conn.execute("SELECT COUNT(*) FROM permissions")
         if cursor.fetchone()[0] == 0:
             permissions = [
-                # researcher permissions
+                # user permissions
                 (2, 'dashboard', 'view'),
                 (2, 'simulation', 'view'),
                 (2, 'simulation', 'run'),
@@ -337,7 +349,7 @@ def seed_data():
                 permissions
             )
             
-        # Idempotent inserts for new researcher page permissions
+        # Idempotent inserts for new user page permissions
         conn.execute(
             """INSERT INTO permissions (role_id, page, action)
                SELECT 2, 'profile', 'view'

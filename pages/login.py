@@ -121,11 +121,8 @@ def handle_login(n_clicks, username, password):
     if reason == 'locked':
         return 'Too many failed attempts. Please wait a few minutes and try again.', 'alert alert-error', None
     
-    if reason == 'pending':
-        return 'Your account is pending administrator approval. You will be able to log in once an admin activates your account.', 'alert alert-warning', None
-    
-    if reason == 'disabled':
-        return 'Your account has been disabled. Please contact the system administrator.', 'alert alert-error', None
+    if reason == 'inactive':
+        return 'Your account has been deactivated. Please contact the system administrator.', 'alert alert-error', None
     
     if reason == 'invalid' or not user:
         return 'Invalid username or password. Please check your credentials and try again.', 'alert alert-error', None

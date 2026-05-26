@@ -207,9 +207,8 @@ def handle_register(n_clicks, fullname, username, password, confirm, email):
         return 'This email address is already registered.', 'alert alert-error', '', 'alert alert-success hidden', None
     
     try:
-        # Researcher pending role
-        pending_role = database.get_role_by_name('researcher_pending')
-        role_id = pending_role['id'] if pending_role else 3
+        user_role = database.get_role_by_name('user')
+        role_id = user_role['id'] if user_role else 2
         
         password_hash = auth.hash_password(password)
         user_id = database.create_user(
@@ -218,17 +217,17 @@ def handle_register(n_clicks, fullname, username, password, confirm, email):
             email=email.strip() if email else '',
             password_hash=password_hash,
             role_id=role_id,
-            status='pending'
+            status='active'
         )
         
         database.log_audit_event(
             user_id=user_id,
             action='register',
             target='auth',
-            details=f"New user registered: '{username}' ({fullname}) — awaiting admin approval"
+            details=f"New user registered: '{username}' ({fullname})"
         )
         
-        return '', 'alert alert-error hidden', 'Account created successfully. Your registration is pending administrator approval. Once approved, you will be able to log in.', 'alert alert-success', '/login'
+        return '', 'alert alert-error hidden', 'Account created successfully. You can now log in.', 'alert alert-success', '/login'
     
     except Exception as e:
         return f"Registration failed. Please try again or contact the administrator.", 'alert alert-error', '', 'alert alert-success hidden', None

@@ -330,6 +330,30 @@ def _build_category_panel(scenarios, active_cat, densities):
 
 # ─── Detail Panel (View Mode) ───────────────────────────────────────
 
+def _hidden_edit_fields():
+    return html.Div(style={'display': 'none'}, children=[
+        html.Button(id='scn-edit-cancel'),
+        html.Button(id='scn-edit-save'),
+        dcc.Input(id='scn-edit-name'),
+        dcc.Input(id='scn-edit-desc'),
+        dcc.Input(id='scn-edit-density'),
+        dcc.Input(id='scn-edit-pedestrian'),
+        dcc.Input(id='scn-edit-emergency'),
+        dcc.Input(id='scn-lane-toggle'),
+        dcc.Input(id='scn-lane-approach'),
+        dcc.Input(id='scn-lane-lanes'),
+        dcc.Input(id='scn-const-toggle'),
+        dcc.Input(id='scn-const-approach'),
+        dcc.Input(id='scn-const-speed'),
+        dcc.Input(id='scn-acc-toggle'),
+        dcc.Input(id='scn-acc-approach'),
+        dcc.Input(id='scn-acc-severity'),
+        dcc.Input(id='scn-flood-toggle'),
+        dcc.Input(id='scn-flood-approach'),
+        dcc.Input(id='scn-flood-severity'),
+        dcc.Input(id='scn-constraints-config'),
+    ])
+
 def _build_detail_panel(scenario):
     if not scenario:
         return [
@@ -352,10 +376,7 @@ def _build_detail_panel(scenario):
                     html.P('Click on a scenario from the library to view its full details and configuration here.'),
                 ]),
             ]),
-            html.Div(className='scenario-detail-footer', style={'display': 'none'}, children=[
-                html.Button('Cancel', id='scn-edit-cancel'),
-                html.Button('Save', id='scn-edit-save'),
-            ]),
+            _hidden_edit_fields()
         ]
 
     is_official = scenario.get('is_official')
@@ -484,6 +505,7 @@ def _build_detail_panel(scenario):
                         id={'type': 'del-scenario-btn', 'index': scenario['id']},
                         className='btn btn-danger', style={'flex': '1'}),
         ]),
+        _hidden_edit_fields()
     ]
 
 
@@ -1038,6 +1060,10 @@ def handle_selection_and_view(card_clicks, row_clicks, view_clicks,
                                overlay_clicks,
                                current_selected, current_mode,
                                current_cat, current_density):
+    from dash import no_update
+    if not ctx.triggered or ctx.triggered[0]['value'] is None:
+        return no_update, no_update, no_update, no_update, no_update
+
     triggered_id = ctx.triggered_id
 
     # Close drawer
@@ -1110,6 +1136,10 @@ def handle_selection_and_view(card_clicks, row_clicks, view_clicks,
     prevent_initial_call=True,
 )
 def toggle_detail_panel(selected_id, drawer_mode, close_clicks, overlay_clicks):
+    if ctx.triggered and ctx.triggered[0]['prop_id'].endswith('.n_clicks') and ctx.triggered[0]['value'] is None:
+        from dash import no_update
+        return no_update, no_update, no_update
+
     triggered_id = ctx.triggered_id
 
     if triggered_id in ('scn-detail-close', 'scn-detail-overlay'):
@@ -1184,6 +1214,10 @@ def handle_save_scenario(save_clicks, selected_id, name, desc, density, pedestri
                           acc_toggle, acc_app, acc_sev,
                           flood_toggle, flood_app, flood_sev,
                           constraints_config):
+    if not save_clicks:
+        from dash import no_update
+        return no_update, no_update, no_update, no_update, no_update
+
     if not auth.validate_current_session():
         auth.clear_session()
         return ('Session expired. Please log in again.',

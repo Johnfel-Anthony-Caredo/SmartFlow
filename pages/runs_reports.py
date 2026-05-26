@@ -54,6 +54,81 @@ def layout():
                                 children=''
                             ),
                             
+                            # KPI Summary Section
+                            html.Div(
+                                className='stats-row runs-kpi-row',
+                                children=[
+                                    html.Div(
+                                        className='mini-stat',
+                                        children=[
+                                            html.Div(
+                                                className='mini-stat-icon',
+                                                style={'color': 'var(--accent)'},
+                                                children=[html.I(className='fas fa-list-ol')]
+                                            ),
+                                            html.Div(
+                                                className='mini-stat-content',
+                                                children=[
+                                                    html.Span('0', id='kpi-total-runs-val', className='mini-stat-value'),
+                                                    html.Span('Total Runs', className='mini-stat-label'),
+                                                ]
+                                            )
+                                        ]
+                                    ),
+                                    html.Div(
+                                        className='mini-stat',
+                                        children=[
+                                            html.Div(
+                                                className='mini-stat-icon',
+                                                style={'color': 'var(--success)'},
+                                                children=[html.I(className='fas fa-check-circle')]
+                                            ),
+                                            html.Div(
+                                                className='mini-stat-content',
+                                                children=[
+                                                    html.Span('0', id='kpi-completed-runs-val', className='mini-stat-value'),
+                                                    html.Span('Completed', className='mini-stat-label'),
+                                                ]
+                                            )
+                                        ]
+                                    ),
+                                    html.Div(
+                                        className='mini-stat',
+                                        children=[
+                                            html.Div(
+                                                className='mini-stat-icon',
+                                                style={'color': 'var(--info)'},
+                                                children=[html.I(className='fas fa-clock')]
+                                            ),
+                                            html.Div(
+                                                className='mini-stat-content',
+                                                children=[
+                                                    html.Span('0.0s', id='kpi-avg-wait-val', className='mini-stat-value'),
+                                                    html.Span('Avg Wait Time', className='mini-stat-label'),
+                                                ]
+                                            )
+                                        ]
+                                    ),
+                                    html.Div(
+                                        className='mini-stat',
+                                        children=[
+                                            html.Div(
+                                                className='mini-stat-icon',
+                                                style={'color': 'var(--warning)'},
+                                                children=[html.I(className='fas fa-traffic-light')]
+                                            ),
+                                            html.Div(
+                                                className='mini-stat-content',
+                                                children=[
+                                                    html.Span('0', id='kpi-max-queue-val', className='mini-stat-value'),
+                                                    html.Span('Max Queue', className='mini-stat-label'),
+                                                ]
+                                            )
+                                        ]
+                                    ),
+                                ]
+                            ),
+                            
                             html.Div(
                                 className='runs-controls',
                                 children=[
@@ -72,7 +147,8 @@ def layout():
                                                                 id='runs-scenario-filter',
                                                                 options=scenario_options,
                                                                 value='all',
-                                                                clearable=False
+                                                                clearable=False,
+                                                                className='dash-dropdown'
                                                             ),
                                                         ]
                                                     ),
@@ -88,7 +164,8 @@ def layout():
                                                                     {'label': 'AI Agent', 'value': 'rl-agent'},
                                                                 ],
                                                                 value='all',
-                                                                clearable=False
+                                                                clearable=False,
+                                                                className='dash-dropdown'
                                                             ),
                                                         ]
                                                     ),
@@ -105,7 +182,8 @@ def layout():
                                                                     {'label': 'Running', 'value': 'running'},
                                                                 ],
                                                                 value='all',
-                                                                clearable=False
+                                                                clearable=False,
+                                                                className='dash-dropdown'
                                                             ),
                                                         ]
                                                     ),
@@ -156,7 +234,7 @@ def layout():
                                                     {'name': 'Control Mode', 'id': 'control_mode'},
                                                     {'name': 'Duration', 'id': 'duration'},
                                                     {'name': 'Status', 'id': 'status'},
-                                                    {'name': 'Avg Wait (s)', 'id': 'avg_wait'},
+                                                    {'name': 'Avg Wait', 'id': 'avg_wait'},
                                                     {'name': 'Max Queue', 'id': 'max_queue'},
                                                     {'name': 'Throughput', 'id': 'throughput'},
                                                 ],
@@ -169,35 +247,67 @@ def layout():
                                                 page_action='native',
                                                 page_current=0,
                                                 page_size=10,
-                                                style_table={'overflowX': 'auto'},
+                                                style_table={'overflowX': 'auto', 'minWidth': '100%'},
                                                 style_cell={
                                                     'textAlign': 'left',
-                                                    'padding': '12px',
-                                                    'fontFamily': 'Inter, sans-serif',
-                                                    'fontSize': '14px',
+                                                    'padding': '12px 14px',
+                                                    'fontFamily': 'var(--font-sans)',
+                                                    'fontSize': '12.5px',
+                                                    'backgroundColor': 'var(--bg-card)',
+                                                    'color': 'var(--text-secondary)',
+                                                    'border': '1px solid var(--border-subtle)',
+                                                    'textOverflow': 'ellipsis',
+                                                    'overflow': 'hidden',
                                                 },
                                                 style_header={
-                                                    'backgroundColor': '#f8f9fa',
-                                                    'fontWeight': '600',
-                                                    'border': '1px solid #dee2e6',
+                                                    'backgroundColor': 'rgba(0, 0, 0, 0.2)',
+                                                    'color': 'var(--text-primary)',
+                                                    'fontWeight': '700',
+                                                    'textTransform': 'uppercase',
+                                                    'letterSpacing': '0.8px',
+                                                    'fontSize': '10.5px',
+                                                    'border': '1px solid var(--border-default)',
                                                 },
-                                                style_data={
-                                                    'border': '1px solid #dee2e6',
+                                                style_filter={
+                                                    'backgroundColor': 'var(--bg-input)',
+                                                    'color': 'var(--text-primary)',
+                                                    'border': '1px solid var(--border-default)',
                                                 },
+                                                style_cell_conditional=[
+                                                    {'if': {'column_id': 'id'}, 'width': '60px', 'minWidth': '60px', 'maxWidth': '60px'},
+                                                    {'if': {'column_id': 'timestamp'}, 'width': '180px', 'minWidth': '180px', 'maxWidth': '180px'},
+                                                    {'if': {'column_id': 'scenario_name'}, 'width': '180px', 'minWidth': '180px'},
+                                                    {'if': {'column_id': 'control_mode'}, 'width': '120px', 'minWidth': '120px', 'maxWidth': '120px'},
+                                                    {'if': {'column_id': 'duration'}, 'width': '95px', 'minWidth': '95px', 'maxWidth': '95px'},
+                                                    {'if': {'column_id': 'status'}, 'width': '110px', 'minWidth': '110px', 'maxWidth': '110px'},
+                                                    {'if': {'column_id': 'avg_wait'}, 'width': '110px', 'minWidth': '110px', 'maxWidth': '110px'},
+                                                    {'if': {'column_id': 'max_queue'}, 'width': '110px', 'minWidth': '110px', 'maxWidth': '110px'},
+                                                    {'if': {'column_id': 'throughput'}, 'width': '130px', 'minWidth': '130px', 'maxWidth': '130px'},
+                                                ],
                                                 style_data_conditional=[
                                                     {
                                                         'if': {'row_index': 'odd'},
-                                                        'backgroundColor': '#f8f9fa',
+                                                        'backgroundColor': 'rgba(255, 255, 255, 0.015)',
                                                     },
                                                     {
-                                                        'if': {'filter_query': '{status} = completed'},
-                                                        'color': '#00e676',
+                                                        'if': {'filter_query': '{status} = COMPLETED'},
+                                                        'color': 'var(--success)',
                                                         'fontWeight': '600',
                                                     },
                                                     {
-                                                        'if': {'filter_query': '{status} = stopped'},
-                                                        'color': '#f44336',
+                                                        'if': {'filter_query': '{status} = STOPPED'},
+                                                        'color': 'var(--error)',
                                                         'fontWeight': '600',
+                                                    },
+                                                    {
+                                                        'if': {'filter_query': '{status} = RUNNING'},
+                                                        'color': 'var(--info)',
+                                                        'fontWeight': '600',
+                                                    },
+                                                    {
+                                                        'if': {'state': 'selected'},
+                                                        'backgroundColor': 'var(--accent-subtle)',
+                                                        'border': '1px solid var(--accent)',
                                                     },
                                                 ],
                                             ),
@@ -321,6 +431,51 @@ def populate_runs_table(refresh_clicks, scenario_filter, mode_filter, status_fil
         })
         
     return filtered_runs
+
+
+@callback(
+    [Output('kpi-total-runs-val', 'children'),
+     Output('kpi-completed-runs-val', 'children'),
+     Output('kpi-avg-wait-val', 'children'),
+     Output('kpi-max-queue-val', 'children')],
+    [Input('runs-table', 'data')]
+)
+def update_kpis(table_data):
+    if not table_data:
+        return '0', '0', '0.0s', '0'
+        
+    total_runs = len(table_data)
+    completed_runs = 0
+    total_wait = 0.0
+    wait_count = 0
+    max_queue = 0
+    
+    for row in table_data:
+        status = str(row.get('status', '') or '').upper()
+        if status == 'COMPLETED':
+            completed_runs += 1
+            
+        avg_wait_str = row.get('avg_wait', '--')
+        if avg_wait_str and avg_wait_str != '--':
+            try:
+                val_str = str(avg_wait_str).replace(' s', '').strip()
+                val = float(val_str)
+                total_wait += val
+                wait_count += 1
+            except (ValueError, TypeError):
+                pass
+                
+        max_q_val = row.get('max_queue', '--')
+        if max_q_val is not None and max_q_val != '--':
+            try:
+                val = int(max_q_val)
+                if val > max_queue:
+                    max_queue = val
+            except (ValueError, TypeError):
+                pass
+                
+    avg_wait_display = f"{total_wait / wait_count:.1f}s" if wait_count > 0 else '0.0s'
+    return str(total_runs), str(completed_runs), avg_wait_display, str(max_queue)
 
 
 @callback(

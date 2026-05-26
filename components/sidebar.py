@@ -4,13 +4,25 @@ Left navigation sidebar with role-based menu items and grouped sections.
 """
 
 from dash import html, dcc
-from flask import session
+from dash import html, dcc
+from flask import session, g
 
 
 def _make_nav_item(item):
+    pathname = getattr(g, 'current_pathname', '') or ''
+    href = item['href']
+    
+    is_active = False
+    if href and href != '/':
+        is_active = pathname.startswith(href)
+    elif href == '/' and pathname == '/':
+        is_active = True
+        
+    class_name = 'nav-item active' if is_active else 'nav-item'
+    
     return dcc.Link(
-        className='nav-item',
-        href=item['href'],
+        className=class_name,
+        href=href,
         id=f'nav-{item["id"]}',
         children=[
             html.I(className=item['icon']),
@@ -27,14 +39,13 @@ def _make_section(title, items):
 
 
 def create_sidebar():
-    user_role = session.get('role', 'researcher')
+    user_role = session.get('role', 'user')
     is_admin = (user_role == 'admin')
 
     main_nav = [
         {'id': 'dashboard',   'label': 'Dashboard',          'icon': 'fas fa-tachometer-alt', 'href': '/dashboard'},
         {'id': 'simulation',  'label': 'Simulation Control',  'icon': 'fas fa-play-circle',   'href': '/simulation'},
         {'id': 'scenarios',   'label': 'Scenarios',           'icon': 'fas fa-map-marked-alt','href': '/scenarios'},
-        {'id': 'live-traffic','label': 'Live Traffic',        'icon': 'fas fa-traffic-light', 'href': '/live-traffic'},
         {'id': 'performance', 'label': 'Performance',         'icon': 'fas fa-chart-line',    'href': '/performance'},
     ]
 

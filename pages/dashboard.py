@@ -20,12 +20,6 @@ def layout():
     return html.Div(
         className='app-layout',
         children=[
-            dcc.Interval(id='clock-interval', interval=1000, n_intervals=0),
-            dcc.Interval(id='sim-interval', interval=1000, n_intervals=0),
-            dcc.Store(
-                id='sim-state',
-                data={'status': 'running', 'elapsed_seconds': 872, 'phase_seconds': 18},
-            ),
 
             create_header(),
 

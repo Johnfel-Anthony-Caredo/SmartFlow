@@ -1,32 +1,204 @@
 """
 SMARTFLOW — Profile & Settings Page
-Manage user settings, landing page, density, and auto-refresh.
+View account details and session activity.
 """
 
-from dash import html, dcc, callback, Input, Output, State, ctx
+from dash import html, dcc
 from flask import session
 import auth
 import database
 from components.header import create_header
 from components.sidebar import create_sidebar
-from components.common import create_section, create_input, create_dropdown, create_button
+from components.common import create_section
 
+
+# ─── Helper ────────────────────────────────────────────────────────
+
+def _format_datetime(dt_str):
+    """Format an ISO datetime string for display, or return a fallback."""
+    if not dt_str:
+        return 'Never'
+    try:
+        from datetime import datetime
+        dt = datetime.fromisoformat(dt_str)
+        return dt.strftime('%B %d, %Y at %I:%M %p').replace(' 0', ' ')
+    except Exception:
+        return dt_str
+
+
+def _role_color(role_name):
+    """Return a CSS color for a given role."""
+    colors = {
+        'admin': 'var(--purple)',
+        'user':  'var(--info)',
+    }
+    return colors.get(role_name, 'var(--accent)')
+
+
+def _status_color(status):
+    colors = {
+        'active':   'var(--success)',
+        'inactive': 'var(--text-muted)',
+        'pending':  'var(--warning)',
+    }
+    return colors.get(status, 'var(--text-secondary)')
+
+
+# ─── Section Builders ──────────────────────────────────────────────
+
+def _build_profile_card(user):
+    """Large profile identity card with avatar, name, and role badge."""
+    role = user.get('role_name', 'user')
+    role_clr = _role_color(role)
+    initials = ''.join(w[0].upper() for w in (user.get('full_name') or 'U').split()[:2])
+
+    return html.Div(className='profile-card', children=[
+        # Avatar + identity
+        html.Div(className='profile-card-top', children=[
+            html.Div(
+                className='profile-avatar',
+                style={
+                    'background': f'color-mix(in srgb, {role_clr} 15%, transparent)',
+                    'border': f'2px solid color-mix(in srgb, {role_clr} 30%, transparent)',
+                    'color': role_clr,
+                },
+                children=initials,
+            ),
+            html.Div(className='profile-identity', children=[
+                html.H2(user['full_name'], className='profile-name'),
+                html.Span(
+                    f'@{user["username"]}',
+                    className='profile-username',
+                ),
+            ]),
+            html.Span(
+                role.upper(),
+                className='profile-role-badge',
+                style={
+                    'color': role_clr,
+                    'background': f'color-mix(in srgb, {role_clr} 10%, transparent)',
+                    'border': f'1px solid color-mix(in srgb, {role_clr} 20%, transparent)',
+                },
+            ),
+        ]),
+
+        html.Hr(className='profile-divider'),
+
+        # Info rows
+        html.Div(className='profile-info-grid', children=[
+            _info_row('fas fa-envelope', 'Email', user.get('email') or 'Not provided'),
+            _info_row('fas fa-shield-halved', 'Account Status',
+                       user.get('status', 'active').capitalize(),
+                       value_color=_status_color(user.get('status', 'active'))),
+            _info_row('fas fa-calendar-plus', 'Member Since',
+                       _format_datetime(user.get('created_at'))),
+            _info_row('fas fa-right-to-bracket', 'Last Login',
+                       _format_datetime(user.get('last_login_at'))),
+        ]),
+
+        html.Hr(className='profile-divider'),
+
+        # Actions
+        html.Div(className='profile-actions', children=[
+            dcc.Link(
+                html.Button(
+                    className='btn btn-secondary btn-sm',
+                    children=[html.I(className='fas fa-key'), html.Span('Change Password')],
+                ),
+                href='/change-password',
+            ),
+        ]),
+    ])
+
+
+def _info_row(icon, label, value, value_color=None):
+    """Single row inside the profile info grid."""
+    value_style = {}
+    if value_color:
+        value_style['color'] = value_color
+
+    return html.Div(className='profile-info-row', children=[
+        html.Div(className='profile-info-icon', children=[
+            html.I(className=icon),
+        ]),
+        html.Div(className='profile-info-content', children=[
+            html.Span(label, className='profile-info-label'),
+            html.Span(value, className='profile-info-value', style=value_style),
+        ]),
+    ])
+
+
+def _build_activity_summary(user):
+    """Quick activity stats panel."""
+    activity = database.get_user_activity_summary(user['id'])
+
+    stats = [
+        ('fas fa-flask',     str(activity.get('run_count', 0)),  'Simulation Runs',  'var(--accent)'),
+        ('fas fa-scroll',    str(activity.get('audit_count', 0)),'Audit Events',     'var(--info)'),
+    ]
+
+    return create_section(
+        title='Activity Summary',
+        icon='fas fa-chart-bar',
+        children=[
+            html.Div(className='profile-stats-row', children=[
+                html.Div(className='profile-stat', children=[
+                    html.Div(
+                        className='profile-stat-icon',
+                        style={
+                            'color': color,
+                            'background': f'color-mix(in srgb, {color} 10%, transparent)',
+                        },
+                        children=[html.I(className=icon)],
+                    ),
+                    html.Div(className='profile-stat-body', children=[
+                        html.Span(val, className='profile-stat-value'),
+                        html.Span(label, className='profile-stat-label'),
+                    ]),
+                ])
+                for icon, val, label, color in stats
+            ]),
+        ],
+    )
+
+
+def _build_session_info():
+    """Current session details."""
+    session_token = session.get('session_token')
+    masked = f'{session_token[:8]}•••' if session_token and len(session_token) > 8 else '—'
+
+    rows = [
+        ('Session ID',  masked),
+        ('IP Address',  'localhost'),
+        ('Platform',    'Plotly Dash / Flask'),
+    ]
+
+    return create_section(
+        title='Current Session',
+        icon='fas fa-fingerprint',
+        children=[
+            html.Div(className='profile-session-grid', children=[
+                html.Div(className='profile-session-row', children=[
+                    html.Span(label, className='profile-session-label'),
+                    html.Span(value, className='profile-session-value'),
+                ])
+                for label, value in rows
+            ]),
+        ],
+    )
+
+
+# ─── Page Layout ───────────────────────────────────────────────────
 
 def layout():
-    # If not authenticated, let app.py redirect
     if not auth.is_authenticated():
         return html.Div()
-        
+
     user_id = session.get('user_id')
     user = database.get_user_by_id(user_id)
     if not user:
-        return html.Div("User profile not found. Please log in.")
-        
-    # Get current session preferences or defaults
-    refresh_rate = session.get('pref_refresh_rate', '30')
-    landing_page = session.get('pref_landing_page', '/dashboard')
-    density_pref = session.get('pref_density', 'cozy')
-    
+        return html.Div('User profile not found. Please log in.')
+
     return html.Div(
         className='app-layout',
         children=[
@@ -41,154 +213,28 @@ def layout():
                             html.Div(
                                 className='page-header',
                                 children=[
-                                    html.H1(children='Profile & Settings'),
-                                    html.P(children='Manage your account information and dashboard preferences.'),
-                                ]
+                                    html.H1('Profile & Settings'),
+                                    html.P('View your account information and session details.'),
+                                ],
                             ),
-                            
+
+                            # Two-column layout
                             html.Div(
-                                id='profile-settings-alert',
-                                className='alert alert-info hidden',
-                                children=''
-                            ),
-                            
-                            html.Div(
-                                style={'display': 'grid', 'gridTemplateColumns': '1fr 1fr', 'gap': '20px'},
+                                className='profile-page-grid',
                                 children=[
-                                    create_section(
-                                        title='Account Information',
-                                        icon='fas fa-user',
-                                        children=[
-                                            html.Div(className='profile-details', children=[
-                                                html.Div(style={'marginBottom': '10px'}, children=[
-                                                    html.Strong('Full Name: '),
-                                                    html.Span(user['full_name'])
-                                                ]),
-                                                html.Div(style={'marginBottom': '10px'}, children=[
-                                                    html.Strong('Username: '),
-                                                    html.Span(user['username'])
-                                                ]),
-                                                html.Div(style={'marginBottom': '10px'}, children=[
-                                                    html.Strong('Email: '),
-                                                    html.Span(user['email'] or 'None provided')
-                                                ]),
-                                                html.Div(style={'marginBottom': '15px'}, children=[
-                                                    html.Strong('System Role: '),
-                                                    html.Span(user['role_name'].upper(), className='status-badge status-active', style={'marginLeft': '5px'})
-                                                ]),
-                                                dcc.Link(
-                                                    create_button('Change Password', className='btn btn-secondary', icon='fas fa-key'),
-                                                    href='/change-password'
-                                                )
-                                            ])
-                                        ]
-                                    ),
-                                    
-                                    create_section(
-                                        title='Dashboard Preferences',
-                                        icon='fas fa-sliders-h',
-                                        children=[
-                                            html.Div(
-                                                className='form-group',
-                                                style={'marginBottom': '15px'},
-                                                children=[
-                                                    html.Label(children='Auto-Refresh Interval (seconds)'),
-                                                    create_dropdown(
-                                                        id='pref-refresh',
-                                                        options=[
-                                                            {'label': '10 seconds', 'value': '10'},
-                                                            {'label': '30 seconds', 'value': '30'},
-                                                            {'label': '60 seconds', 'value': '60'},
-                                                            {'label': 'Disabled', 'value': '0'}
-                                                        ],
-                                                        value=refresh_rate
-                                                    )
-                                                ]
-                                            ),
-                                            
-                                            html.Div(
-                                                className='form-group',
-                                                style={'marginBottom': '15px'},
-                                                children=[
-                                                    html.Label(children='Default Landing Page'),
-                                                    create_dropdown(
-                                                        id='pref-landing',
-                                                        options=[
-                                                            {'label': 'Dashboard Overview', 'value': '/dashboard'},
-                                                            {'label': 'Simulation Controls', 'value': '/simulation'},
-                                                            {'label': 'Scenarios Library', 'value': '/scenarios'}
-                                                        ],
-                                                        value=landing_page
-                                                    )
-                                                ]
-                                            ),
-                                            
-                                            html.Div(
-                                                className='form-group',
-                                                style={'marginBottom': '20px'},
-                                                children=[
-                                                    html.Label(children='Layout Density'),
-                                                    create_dropdown(
-                                                        id='pref-density',
-                                                        options=[
-                                                            {'label': 'Cozy (Default)', 'value': 'cozy'},
-                                                            {'label': 'Compact', 'value': 'compact'}
-                                                        ],
-                                                        value=density_pref
-                                                    )
-                                                ]
-                                            ),
-                                            
-                                            create_button(
-                                                id='save-pref-btn',
-                                                text='Save Preferences',
-                                                icon='fas fa-check-circle',
-                                                className='btn btn-primary'
-                                            )
-                                        ]
-                                    )
-                                ]
+                                    # Left — profile card (full height)
+                                    _build_profile_card(user),
+
+                                    # Right — stacked panels
+                                    html.Div(className='profile-right-stack', children=[
+                                        _build_activity_summary(user),
+                                        _build_session_info(),
+                                    ]),
+                                ],
                             ),
-                            dcc.Location(id='profile-settings-redirect', refresh=True)
-                        ]
-                    )
-                ]
-            )
-        ]
+                        ],
+                    ),
+                ],
+            ),
+        ],
     )
-
-
-@callback(
-    [Output('profile-settings-alert', 'children'),
-     Output('profile-settings-alert', 'className'),
-     Output('profile-settings-redirect', 'pathname')],
-    Input('save-pref-btn', 'n_clicks'),
-    [State('pref-refresh', 'value'),
-     State('pref-landing', 'value'),
-     State('pref-density', 'value')],
-    prevent_initial_call=True
-)
-def handle_save_preferences(n_clicks, refresh, landing, density):
-    if not n_clicks:
-        return '', 'alert alert-info hidden', None
-        
-    if not auth.validate_current_session():
-        auth.clear_session()
-        return 'Session expired. Please log in again.', 'alert alert-error', '/login'
-        
-    # Save preferences to session
-    session['pref_refresh_rate'] = refresh
-    session['pref_landing_page'] = landing
-    session['pref_density'] = density
-    
-    # Log audit event
-    user_id = session.get('user_id')
-    username = session.get('username')
-    database.log_audit_event(
-        user_id=user_id,
-        action='save_preferences',
-        target='user_settings',
-        details=f"User {username} updated their preferences: Refresh={refresh}s, Landing={landing}, Density={density}"
-    )
-    
-    return 'Preferences saved successfully.', 'alert alert-success', '/profile'

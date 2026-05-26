@@ -16,9 +16,14 @@ def register_callbacks(app):
     @app.callback(
         [Output('current-date', 'children'),
          Output('current-time', 'children')],
-        Input('clock-interval', 'n_intervals')
+        Input('clock-interval', 'n_intervals'),
+        State('url', 'pathname'),
+        prevent_initial_call=True
     )
-    def update_clock(_n):
+    def update_clock(_n, pathname):
+        path = pathname.rstrip('/') if pathname else ''
+        if path in ('', '/login', '/register'):
+            return no_update, no_update
         now = datetime.now()
         date_str = now.strftime('%B %d, %Y')        # e.g. "May 22, 2026"
         time_str = now.strftime('%I:%M %p').lstrip('0')  # e.g. "3:35 PM"
@@ -28,12 +33,12 @@ def register_callbacks(app):
     # SIMULATION TIMER — increments while status is "running"
     # ═══════════════════════════════════════════════════════════════════
     @app.callback(
-        [Output('sim-timer', 'children'),
-         Output('sim-state', 'data')],
+        Output('sim-state', 'data'),
         Input('sim-interval', 'n_intervals'),
-        State('sim-state', 'data')
+        State('sim-state', 'data'),
+        prevent_initial_call=True
     )
-    def update_sim_timer(_n, state):
+    def update_sim_state(_n, state):
         if state is None:
             state = {'status': 'running', 'elapsed_seconds': 872, 'phase_seconds': 18}
 
@@ -46,21 +51,39 @@ def register_callbacks(app):
                 phase = random.randint(15, 35)
             state['phase_seconds'] = phase
 
+        return state
+
+    @app.callback(
+        Output('sim-timer', 'children'),
+        Input('sim-state', 'data'),
+        State('url', 'pathname'),
+        prevent_initial_call=True
+    )
+    def update_sim_timer_display(state, pathname):
+        path = pathname.rstrip('/') if pathname else ''
+        if path in ('', '/login', '/register'):
+            return no_update
+            
         total = state.get('elapsed_seconds', 0)
         h = total // 3600
         m = (total % 3600) // 60
         s = total % 60
-        timer_str = f'{h:02d}:{m:02d}:{s:02d}'
-        return timer_str, state
+        return f'{h:02d}:{m:02d}:{s:02d}'
 
     # ═══════════════════════════════════════════════════════════════════
     # PHASE TIMER — countdown display updated from sim-state
     # ═══════════════════════════════════════════════════════════════════
     @app.callback(
         Output('phase-timer-seconds', 'children'),
-        Input('sim-state', 'data')
+        Input('sim-state', 'data'),
+        State('url', 'pathname'),
+        prevent_initial_call=True
     )
-    def update_phase_timer(state):
+    def update_phase_timer(state, pathname):
+        path = pathname.rstrip('/') if pathname else ''
+        if path != '/dashboard':
+            return no_update
+            
         if state is None:
             return '18'
         return str(state.get('phase_seconds', 18))

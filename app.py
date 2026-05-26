@@ -12,7 +12,7 @@ import database
 import auth
 
 from pages import login, register, dashboard, simulation, scenarios
-from pages import live_traffic, performance, ai_agent, runs_reports
+from pages import performance, ai_agent, runs_reports
 from pages import change_password, admin_users, admin_roles
 from pages import admin_audit, admin_backups
 from pages import profile_settings, help_about
@@ -48,7 +48,6 @@ PAGE_ROUTES = {
     '/dashboard':       ('dashboard', dashboard),
     '/simulation':      ('simulation', simulation),
     '/scenarios':       ('scenarios', scenarios),
-    '/live-traffic':    ('live-traffic', live_traffic),
     '/performance':     ('performance', performance),
     '/ai-agent':        ('ai-agent', ai_agent),
     '/runs-reports':    ('runs-reports', runs_reports),
@@ -110,6 +109,12 @@ def _admin_or_denied(page_key, page_module):
 
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
+    dcc.Interval(id='clock-interval', interval=1000, n_intervals=0),
+    dcc.Interval(id='sim-interval', interval=1000, n_intervals=0),
+    dcc.Store(
+        id='sim-state',
+        data={'status': 'running', 'elapsed_seconds': 872, 'phase_seconds': 18},
+    ),
     html.Div(id='page-content'),
 ])
 
@@ -117,6 +122,9 @@ app.layout = html.Div([
 @callback(Output('page-content', 'children'),
           Input('url', 'pathname'))
 def route_page(pathname):
+    from flask import g
+    g.current_pathname = pathname
+    
     # Periodic session cleanup
     try:
         database.delete_expired_sessions()
@@ -156,7 +164,7 @@ def route_page(pathname):
     if session.get('must_change_password') and pathname != '/change-password':
         return dcc.Location(pathname='/change-password', id='force-change-pwd')
 
-    # -- Researcher pages --
+    # ── User pages ──
     if pathname in PAGE_ROUTES:
         page_key, module = PAGE_ROUTES[pathname]
         return _page_or_denied(page_key, module)

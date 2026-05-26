@@ -27,10 +27,8 @@ def _avatar_color(username):
 
 def _pill_badge(label, variant):
     css_map = {
-        'admin': 'pill-admin', 'researcher': 'pill-researcher',
-        'researcher_pending': 'pill-pending', 'disabled': 'pill-disabled',
+        'admin': 'pill-admin', 'user': 'pill-user',
         'active': 'pill-status-active', 'inactive': 'pill-status-inactive',
-        'pending': 'pill-status-pending',
     }
     cls = css_map.get(variant, '')
     return html.Span(label.replace('_', ' ').title(), className=f'pill-badge {cls}')
@@ -64,7 +62,7 @@ def _fmt_date(iso_str):
 def _build_kpi_row(total, pending, active, admins):
     kpis = [
         ('fas fa-users', str(total), 'Total Users', 'var(--info)'),
-        ('fas fa-user-clock', str(pending), 'Pending Registrations', 'var(--warning)'),
+        ('fas fa-user-clock', str(pending), 'Inactive Accounts', 'var(--warning)'),
         ('fas fa-user-check', str(active), 'Active Users', 'var(--success)'),
         ('fas fa-shield-halved', str(admins), 'Admin Users', 'var(--purple)'),
     ]
@@ -87,7 +85,7 @@ def _build_pending_list(pending_users):
         return html.Div(className='empty-state', children=[
             html.I(className='fas fa-check-circle'),
             html.P('All Clear'),
-            html.P('No pending registrations. All accounts have been reviewed.',
+            html.P('No inactive accounts.',
                    className='empty-state-hint'),
         ])
 
@@ -249,7 +247,7 @@ def layout():
 
     all_users = database.list_users()
     pending = [u for u in all_users
-               if u['status'] == 'pending' or u['role_name'] == 'researcher_pending']
+               if u['status'] == 'inactive']
     registered = [u for u in all_users if u not in pending]
     current_user_id = session.get('user_id')
     total = len(all_users)
@@ -303,9 +301,7 @@ def layout():
                                     options=[
                                         {'label': 'All Roles', 'value': 'all'},
                                         {'label': 'Admin', 'value': 'admin'},
-                                        {'label': 'Researcher', 'value': 'researcher'},
-                                        {'label': 'Pending', 'value': 'researcher_pending'},
-                                        {'label': 'Disabled', 'value': 'disabled'},
+                                        {'label': 'User', 'value': 'user'},
                                     ],
                                     value='all', clearable=False, searchable=False,
                                     className='dash-dropdown dropdown-small'),
@@ -318,8 +314,7 @@ def layout():
                                         {'label': 'All Statuses', 'value': 'all'},
                                         {'label': 'Active', 'value': 'active'},
                                         {'label': 'Inactive', 'value': 'inactive'},
-                                        {'label': 'Pending', 'value': 'pending'},
-                                    ],
+                                                                            ],
                                     value='all', clearable=False, searchable=False,
                                     className='dash-dropdown dropdown-small'),
                             ]),
@@ -336,7 +331,7 @@ def layout():
                         html.Div(className='section-header', children=[
                             html.I(className='fas fa-user-plus'),
                             html.H3(className='section-title', children=[
-                                html.Span('Pending Registrations'),
+                                html.Span('Inactive Accounts'),
                                 html.Small(f' {len(pending)} request{"s" if len(pending) != 1 else ""} '
                                            'awaiting review',
                                            className='section-subtitle'),
@@ -377,7 +372,7 @@ def filter_users_table(search, role_filter, status_filter):
     current_user_id = session.get('user_id')
     all_users = database.list_users()
     pending_ids = {u['id'] for u in all_users
-                   if u['status'] == 'pending' or u['role_name'] == 'researcher_pending'}
+                   if u['status'] == 'inactive'}
     registered = [u for u in all_users if u['id'] not in pending_ids]
 
     if search:
@@ -449,7 +444,7 @@ def handle_user_actions(approve_clicks, reject_clicks, activate_clicks,
             user_id=current_admin_id, action='reject_user', target='users',
             details=f"Admin {current_admin_username} rejected and deleted pending "
                     f"user '{user['username']}'")
-        return (f"Pending user '{user['username']}' was rejected.",
+        return (f"Inactive user '{user['username']}' was rejected.",
                 'alert alert-success', {})
 
     elif action_type == 'activate-btn':

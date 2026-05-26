@@ -10,7 +10,7 @@ from flask import session
 
 def create_header():
     user_name = session.get('full_name', 'User')
-    user_role = session.get('role', 'Researcher')
+    user_role = session.get('role', 'User')
     user_initial = user_name[0].upper() if user_name else 'U'
 
     return html.Header(

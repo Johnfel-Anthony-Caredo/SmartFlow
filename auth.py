@@ -23,7 +23,7 @@ def verify_password(password: str, hashed: str) -> bool:
 def authenticate(username: str, password: str) -> tuple[dict | None, str | None]:
     """Authenticate and return (user_dict, failure_reason).
     failure_reason is None on success, or one of:
-      'invalid', 'pending', 'disabled', 'locked'
+      'invalid', 'inactive', 'locked'
     """
     if not username or not password:
         return None, 'invalid'
@@ -36,11 +36,8 @@ def authenticate(username: str, password: str) -> tuple[dict | None, str | None]
         database.record_login_attempt(username, False)
         return None, 'invalid'
 
-    if user['status'] == 'pending' or user['role_name'] == 'researcher_pending':
-        return user, 'pending'
-
-    if user['status'] in ('inactive', 'disabled'):
-        return user, 'disabled'
+    if user['status'] == 'inactive':
+        return user, 'inactive'
 
     if user['status'] != 'active':
         return None, 'invalid'
