@@ -356,8 +356,30 @@ def create_simulation_view() -> html.Div:
                 html.Img(
                     id='sim-image',
                     src='/assets/traffic_intersection.png',
-                    alt='Live Traffic Simulation — Tagum City Main Intersection',
+                    alt='Live Traffic Simulation',
                     className='sim-image',
+                    style={'display': 'none'},
+                ),
+                html.Div(
+                    id='three-container',
+                    className='three-container',
+                    style={'display': 'block'},
+                    children=[
+                        html.Div(
+                            id='three-loading-msg',
+                            style={
+                                'position': 'absolute', 'inset': '0',
+                                'display': 'flex', 'alignItems': 'center',
+                                'justifyContent': 'center',
+                                'color': 'var(--text-muted)', 'fontSize': '13px',
+                                'zIndex': '1',
+                            },
+                            children=[
+                                html.I(className='fa-solid fa-spinner fa-spin', style={'marginRight': '8px'}),
+                                '3D Scene loading — waiting for engine state...',
+                            ],
+                        ),
+                    ],
                 ),
 
                 # Floating overlays
@@ -368,9 +390,9 @@ def create_simulation_view() -> html.Div:
                 ]),
                 html.Div(className='sim-overlay overlay-bottom-left', children=[
                     html.Div('Signal Phase', className='overlay-label'),
-                    html.Div(className='overlay-value phase-green', children=[
+                    html.Div(className='overlay-value phase-green', id='sim-phase-display', children=[
                         html.I(className='fa-solid fa-traffic-light'),
-                        ' Phase 2 — NS Green',
+                        ' Phase 1 — NS Green',
                     ]),
                 ]),
                 html.Div(
@@ -396,15 +418,15 @@ def create_simulation_view() -> html.Div:
                 html.Div(className='sim-overlay overlay-stats', children=[
                     html.Span(className='stat-chip', children=[
                         html.I(className='fa-solid fa-car'),
-                        ' 47 vehicles',
+                        html.Span(' 0 vehicles', id='stat-vehicles'),
                     ]),
                     html.Span(className='stat-chip', children=[
                         html.I(className='fa-solid fa-person-walking'),
-                        ' 12 peds',
+                        html.Span(' 0 peds', id='stat-pedestrians'),
                     ]),
                     html.Span(className='stat-chip emergency', children=[
                         html.I(className='fa-solid fa-truck-medical'),
-                        ' 1 EV',
+                        html.Span(' 0 EV', id='stat-emergency'),
                     ]),
                 ]),
             ]),
@@ -547,65 +569,72 @@ def create_kpi_row() -> html.Div:
     kpis = [
         {
             'id': 'kpi-wait-time',
+            'value_id': 'kpi-wait-time-value',
             'color': '#00e676',
             'icon': 'fa-solid fa-hourglass-half',
             'label': 'Avg. Waiting Time',
-            'value': '12.4',
+            'value': '0.0',
             'unit': 's',
-            'change_class': 'kpi-change positive',
-            'change_icon': 'fa-solid fa-arrow-down',
-            'change_text': ' 18% vs baseline',
+            'change_class': 'kpi-change',
+            'change_icon': '',
+            'change_text': '',
         },
         {
             'id': 'kpi-queue-length',
+            'value_id': 'kpi-queue-length-value',
             'color': '#42a5f5',
             'icon': 'fa-solid fa-bars-staggered',
             'label': 'Avg. Queue Length',
-            'value': '5.2',
+            'value': '0.0',
             'unit': 'veh',
-            'change_class': 'kpi-change positive',
-            'change_icon': 'fa-solid fa-arrow-down',
-            'change_text': ' 12% vs baseline',
+            'change_class': 'kpi-change',
+            'change_icon': '',
+            'change_text': '',
         },
         {
             'id': 'kpi-throughput',
+            'value_id': 'kpi-throughput-value',
             'color': '#ab47bc',
             'icon': 'fa-solid fa-gauge-high',
             'label': 'Throughput',
-            'value': '842',
+            'value': '0',
             'unit': 'veh/h',
-            'change_class': 'kpi-change positive',
-            'change_icon': 'fa-solid fa-arrow-up',
-            'change_text': ' 24% vs baseline',
+            'change_class': 'kpi-change',
+            'change_icon': '',
+            'change_text': '',
         },
         {
             'id': 'kpi-pedestrians',
+            'value_id': 'kpi-pedestrians-value',
             'color': '#ffa726',
             'icon': 'fa-solid fa-person-walking',
             'label': 'Pedestrians Crossed',
-            'value': '186',
+            'value': '0',
             'unit': None,
-            'change_class': 'kpi-change neutral',
-            'change_icon': 'fa-solid fa-check',
-            'change_text': ' All safe',
+            'change_class': 'kpi-change',
+            'change_icon': '',
+            'change_text': '',
         },
         {
             'id': 'kpi-emergency',
+            'value_id': 'kpi-emergency-value',
             'color': '#ef5350',
             'icon': 'fa-solid fa-truck-medical',
             'label': 'Emergency Vehicles',
-            'value': '1',
+            'value': '0',
             'unit': 'active',
-            'change_class': 'kpi-change priority',
-            'change_icon': 'fa-solid fa-bolt',
-            'change_text': ' Priority active',
+            'change_class': 'kpi-change',
+            'change_icon': '',
+            'change_text': '',
         },
     ]
 
     cards: list = []
     for kpi in kpis:
         # Build value children (number + optional unit span)
-        value_children: list = [kpi['value']]
+        value_children: list = [
+            html.Span(kpi['value'], id=kpi.get('value_id'), className='kpi-number')
+        ]
         if kpi['unit']:
             value_children.append(
                 html.Span(kpi['unit'], className='kpi-unit')
@@ -627,6 +656,7 @@ def create_kpi_row() -> html.Div:
                                   children=value_children),
                         html.Span(
                             className=kpi['change_class'],
+                            id=f"{kpi['id']}-change",
                             children=[
                                 html.I(className=kpi['change_icon']),
                                 kpi['change_text'],

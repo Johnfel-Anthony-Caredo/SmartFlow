@@ -18,6 +18,11 @@ from pages import admin_audit, admin_backups
 from pages import profile_settings, help_about
 
 
+external_scripts = [
+    'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js',
+    'https://cdn.jsdelivr.net/npm/three@0.128/examples/js/loaders/GLTFLoader.js',
+]
+
 external_stylesheets = [
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css',
@@ -25,6 +30,7 @@ external_stylesheets = [
 
 app = Dash(
     __name__,
+    external_scripts=external_scripts,
     external_stylesheets=external_stylesheets,
     title='SMARTFLOW — Traffic Simulation Platform',
     update_title=None,
@@ -110,11 +116,11 @@ def _admin_or_denied(page_key, page_module):
 app.layout = html.Div([
     dcc.Location(id='url', refresh=False),
     dcc.Interval(id='clock-interval', interval=1000, n_intervals=0),
-    dcc.Interval(id='sim-interval', interval=1000, n_intervals=0),
-    dcc.Store(
-        id='sim-state',
-        data={'status': 'running', 'elapsed_seconds': 872, 'phase_seconds': 18},
-    ),
+    dcc.Interval(id='sim-interval', interval=500, n_intervals=0),
+    dcc.Store(id='sim-state', data={'status': 'stopped', 'elapsed_seconds': 0, 'phase_seconds': 30}),
+    dcc.Store(id='sim-engine-tick', data=0),
+    dcc.Store(id='engine-state-json', data='{}'),
+    html.Script(src='/assets/three-bridge.mjs', type='module'),
     html.Div(id='page-content'),
 ])
 
