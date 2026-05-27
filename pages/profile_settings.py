@@ -9,7 +9,7 @@ import auth
 import database
 from components.header import create_header
 from components.sidebar import create_sidebar
-from components.common import create_section
+from components.common import create_section, create_mini_stat
 
 
 # ─── Helper ────────────────────────────────────────────────────────
@@ -128,38 +128,21 @@ def _info_row(icon, label, value, value_color=None):
     ])
 
 
-def _build_activity_summary(user):
-    """Quick activity stats panel."""
+def _build_stats_row(user):
+    """Top-level KPI summary using mini-stat chips."""
     activity = database.get_user_activity_summary(user['id'])
+    last_login = _format_datetime(user.get('last_login_at'))
 
-    stats = [
-        ('fas fa-flask',     str(activity.get('run_count', 0)),  'Simulation Runs',  'var(--accent)'),
-        ('fas fa-scroll',    str(activity.get('audit_count', 0)),'Audit Events',     'var(--info)'),
-    ]
-
-    return create_section(
-        title='Activity Summary',
-        icon='fas fa-chart-bar',
-        children=[
-            html.Div(className='profile-stats-row', children=[
-                html.Div(className='profile-stat', children=[
-                    html.Div(
-                        className='profile-stat-icon',
-                        style={
-                            'color': color,
-                            'background': f'color-mix(in srgb, {color} 10%, transparent)',
-                        },
-                        children=[html.I(className=icon)],
-                    ),
-                    html.Div(className='profile-stat-body', children=[
-                        html.Span(val, className='profile-stat-value'),
-                        html.Span(label, className='profile-stat-label'),
-                    ]),
-                ])
-                for icon, val, label, color in stats
-            ]),
-        ],
-    )
+    return html.Div(className='stats-row profile-kpi-row', children=[
+        create_mini_stat('Simulation Runs', str(activity.get('run_count', 0)),
+                         'fas fa-flask', 'var(--accent)'),
+        create_mini_stat('Audit Events', str(activity.get('audit_count', 0)),
+                         'fas fa-scroll', 'var(--info)'),
+        create_mini_stat('Last Login', last_login,
+                         'fas fa-right-to-bracket', 'var(--warning)'),
+        create_mini_stat('Account Status', user.get('status', 'active').capitalize(),
+                         'fas fa-shield-halved', _status_color(user.get('status', 'active'))),
+    ])
 
 
 def _build_session_info():
@@ -218,6 +201,8 @@ def layout():
                                 ],
                             ),
 
+                            _build_stats_row(user),
+
                             # Two-column layout
                             html.Div(
                                 className='profile-page-grid',
@@ -227,7 +212,6 @@ def layout():
 
                                     # Right — stacked panels
                                     html.Div(className='profile-right-stack', children=[
-                                        _build_activity_summary(user),
                                         _build_session_info(),
                                     ]),
                                 ],

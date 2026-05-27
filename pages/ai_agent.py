@@ -9,6 +9,46 @@ from components.sidebar import create_sidebar
 from components.common import create_section, create_kpi_card
 
 
+# ─── Chart Theme Defaults ──────────────────────────────────────────
+
+_LAYOUT = {
+    'plot_bgcolor': 'rgba(0,0,0,0)',
+    'paper_bgcolor': 'rgba(0,0,0,0)',
+    'font': {'family': 'Inter, sans-serif', 'color': '#94a3b8', 'size': 11},
+    'margin': {'l': 48, 'r': 16, 't': 36, 'b': 40},
+    'xaxis': {
+        'gridcolor': 'rgba(255,255,255,0.03)',
+        'zerolinecolor': 'rgba(255,255,255,0.06)',
+        'tickfont': {'size': 10, 'color': '#64748b'},
+        'title': {'font': {'size': 11, 'color': '#64748b'}},
+    },
+    'yaxis': {
+        'gridcolor': 'rgba(255,255,255,0.03)',
+        'zerolinecolor': 'rgba(255,255,255,0.06)',
+        'tickfont': {'size': 10, 'color': '#64748b'},
+        'title': {'font': {'size': 11, 'color': '#64748b'}},
+    },
+    'legend': {
+        'font': {'size': 11, 'color': '#94a3b8'},
+        'bgcolor': 'rgba(0,0,0,0)',
+        'bordercolor': 'rgba(255,255,255,0.06)',
+    },
+    'showlegend': False,
+}
+
+_GRAPH_CONFIG = {'displayModeBar': False, 'responsive': True}
+
+
+def _empty_chart(title, xaxis_title, yaxis_title, **overrides):
+    """Return a dark-themed empty figure."""
+    layout = {**_LAYOUT}
+    layout['title'] = {'text': title, 'font': {'size': 13, 'color': '#f1f5f9'}, 'x': 0.02, 'xanchor': 'left'}
+    layout['xaxis'] = {**layout['xaxis'], 'title': {'text': xaxis_title, 'font': {'size': 11, 'color': '#64748b'}}}
+    layout['yaxis'] = {**layout['yaxis'], 'title': {'text': yaxis_title, 'font': {'size': 11, 'color': '#64748b'}}}
+    layout.update(overrides)
+    return {'data': [], 'layout': layout}
+
+
 def layout():
     return html.Div(
         className='app-layout',
@@ -24,279 +64,249 @@ def layout():
                             html.Div(
                                 className='page-header',
                                 children=[
-                                    html.H1(children='AI Agent (RL)'),
-                                    html.P(children='Reinforcement learning agent status and training'),
-                                ]
+                                    html.H1('AI Agent (RL)'),
+                                    html.P('Reinforcement learning agent status and training'),
+                                ],
                             ),
-                            
+
+                            # ── KPI Summary ──
                             html.Div(
-                                className='kpi-grid',
+                                className='stats-row',
                                 children=[
                                     create_kpi_card(
                                         id='rl-episodes',
                                         icon='fas fa-redo',
                                         title='Episodes',
                                         value='--',
-                                        color='#00e676'
+                                        color='var(--accent)',
                                     ),
                                     create_kpi_card(
                                         id='rl-reward',
                                         icon='fas fa-star',
                                         title='Avg. Reward',
                                         value='--',
-                                        color='#ffc107'
+                                        color='var(--warning)',
                                     ),
                                     create_kpi_card(
                                         id='rl-epsilon',
                                         icon='fas fa-random',
                                         title='Epsilon',
                                         value='--',
-                                        color='#2196f3'
+                                        color='var(--info)',
                                     ),
                                     create_kpi_card(
                                         id='rl-loss',
                                         icon='fas fa-chart-line',
                                         title='Loss',
                                         value='--',
-                                        color='#f44336'
+                                        color='var(--error)',
                                     ),
-                                ]
+                                ],
                             ),
-                            
-                            html.Div(
-                                className='agent-status-section',
+
+                            # ── Agent Status ──
+                            create_section(
+                                title='Agent Status',
+                                icon='fas fa-robot',
                                 children=[
-                                    create_section(
-                                        title='Agent Status',
-                                        icon='fas fa-robot',
+                                    html.Div(
+                                        className='agent-status-grid',
                                         children=[
-                                            html.Div(
-                                                className='status-grid',
-                                                children=[
-                                                    html.Div(
-                                                        className='status-card',
-                                                        children=[
-                                                            html.Div(className='status-label', children='Status'),
-                                                            html.Div(id='agent-status', className='status-large idle', children='Idle'),
-                                                        ]
-                                                    ),
-                                                    html.Div(
-                                                        className='status-card',
-                                                        children=[
-                                                            html.Div(className='status-label', children='Model'),
-                                                            html.Div(id='agent-model', className='status-large', children='DQN'),
-                                                        ]
-                                                    ),
-                                                    html.Div(
-                                                        className='status-card',
-                                                        children=[
-                                                            html.Div(className='status-label', children='Last Action'),
-                                                            html.Div(id='agent-last-action', className='status-large', children='--'),
-                                                        ]
-                                                    ),
-                                                    html.Div(
-                                                        className='status-card',
-                                                        children=[
-                                                            html.Div(className='status-label', children='Total Steps'),
-                                                            html.Div(id='agent-total-steps', className='status-large', children='0'),
-                                                        ]
-                                                    ),
-                                                ]
-                                            ),
-                                        ]
+                                            html.Div(className='agent-status-card', children=[
+                                                html.Span('Status', className='agent-status-label'),
+                                                html.Span('Idle', id='agent-status',
+                                                          className='agent-status-value idle'),
+                                            ]),
+                                            html.Div(className='agent-status-card', children=[
+                                                html.Span('Model', className='agent-status-label'),
+                                                html.Span('DQN', id='agent-model',
+                                                          className='agent-status-value'),
+                                            ]),
+                                            html.Div(className='agent-status-card', children=[
+                                                html.Span('Last Action', className='agent-status-label'),
+                                                html.Span('--', id='agent-last-action',
+                                                          className='agent-status-value'),
+                                            ]),
+                                            html.Div(className='agent-status-card', children=[
+                                                html.Span('Total Steps', className='agent-status-label'),
+                                                html.Span('0', id='agent-total-steps',
+                                                          className='agent-status-value'),
+                                            ]),
+                                        ],
                                     ),
-                                ]
+                                ],
                             ),
-                            
-                            html.Div(
-                                className='training-charts',
+
+                            # ── Training Charts ──
+                            create_section(
+                                title='Training Progress',
+                                icon='fas fa-chart-area',
                                 children=[
-                                    create_section(
-                                        title='Training Progress',
-                                        icon='fas fa-chart-area',
-                                        children=[
-                                            dcc.Graph(
-                                                id='reward-chart',
-                                                figure={
-                                                    'data': [],
-                                                    'layout': {
-                                                        'title': 'Reward per Episode',
-                                                        'xaxis': {'title': 'Episode'},
-                                                        'yaxis': {'title': 'Reward'},
-                                                        'plot_bgcolor': '#ffffff',
-                                                        'paper_bgcolor': '#ffffff',
-                                                    }
-                                                },
-                                                config={'displayModeBar': True}
-                                            ),
-                                        ]
+                                    dcc.Graph(
+                                        id='reward-chart',
+                                        figure=_empty_chart(
+                                            'Reward per Episode',
+                                            'Episode', 'Reward',
+                                        ),
+                                        config=_GRAPH_CONFIG,
                                     ),
-                                    
-                                    create_section(
-                                        title='Loss and Epsilon',
-                                        icon='fas fa-chart-line',
-                                        children=[
-                                            html.Div(
-                                                className='charts-row',
-                                                children=[
-                                                    dcc.Graph(
-                                                        id='loss-chart',
-                                                        figure={
-                                                            'data': [],
-                                                            'layout': {
-                                                                'title': 'Training Loss',
-                                                                'xaxis': {'title': 'Episode'},
-                                                                'yaxis': {'title': 'Loss'},
-                                                                'plot_bgcolor': '#ffffff',
-                                                                'paper_bgcolor': '#ffffff',
-                                                            }
-                                                        },
-                                                        config={'displayModeBar': False}
-                                                    ),
-                                                    dcc.Graph(
-                                                        id='epsilon-chart',
-                                                        figure={
-                                                            'data': [],
-                                                            'layout': {
-                                                                'title': 'Epsilon Decay',
-                                                                'xaxis': {'title': 'Episode'},
-                                                                'yaxis': {'title': 'Epsilon'},
-                                                                'plot_bgcolor': '#ffffff',
-                                                                'paper_bgcolor': '#ffffff',
-                                                            }
-                                                        },
-                                                        config={'displayModeBar': False}
-                                                    ),
-                                                ]
-                                            ),
-                                        ]
-                                    ),
-                                ]
+                                ],
                             ),
-                            
-                            html.Div(
-                                className='agent-controls-section',
+
+                            html.Div(className='agent-training-row', children=[
+                                create_section(
+                                    title='Training Loss',
+                                    icon='fas fa-chart-line',
+                                    children=[
+                                        dcc.Graph(
+                                            id='loss-chart',
+                                            figure=_empty_chart(
+                                                'Training Loss',
+                                                'Episode', 'Loss',
+                                            ),
+                                            config=_GRAPH_CONFIG,
+                                        ),
+                                    ],
+                                ),
+
+                                create_section(
+                                    title='Epsilon Decay',
+                                    icon='fas fa-chart-area',
+                                    children=[
+                                        dcc.Graph(
+                                            id='epsilon-chart',
+                                            figure=_empty_chart(
+                                                'Epsilon Decay',
+                                                'Episode', 'Epsilon',
+                                            ),
+                                            config=_GRAPH_CONFIG,
+                                        ),
+                                    ],
+                                ),
+                            ]),
+
+                            # ── Training Controls & Hyperparameters ──
+                            create_section(
+                                title='Training Controls',
+                                icon='fas fa-cogs',
                                 children=[
-                                    create_section(
-                                        title='Training Controls',
-                                        icon='fas fa-cogs',
+                                    html.Div(
+                                        className='agent-control-btns',
+                                        children=[
+                                            html.Button(
+                                                id='train-agent-btn',
+                                                className='btn btn-success',
+                                                children=[
+                                                    html.I(className='fas fa-play'),
+                                                    ' Start Training',
+                                                ],
+                                            ),
+                                            html.Button(
+                                                id='stop-training-btn',
+                                                className='btn btn-danger',
+                                                children=[
+                                                    html.I(className='fas fa-stop'),
+                                                    ' Stop Training',
+                                                ],
+                                            ),
+                                            html.Button(
+                                                id='save-model-btn',
+                                                className='btn btn-primary',
+                                                children=[
+                                                    html.I(className='fas fa-save'),
+                                                    ' Save Model',
+                                                ],
+                                            ),
+                                            html.Button(
+                                                id='load-model-btn',
+                                                className='btn btn-secondary',
+                                                children=[
+                                                    html.I(className='fas fa-upload'),
+                                                    ' Load Model',
+                                                ],
+                                            ),
+                                        ],
+                                    ),
+
+                                    html.Div(className='agent-hyper-header', children=[
+                                        html.I(className='fas fa-sliders'),
+                                        html.H4('Hyperparameters'),
+                                    ]),
+
+                                    html.Div(
+                                        className='agent-hyper-grid',
                                         children=[
                                             html.Div(
-                                                className='control-buttons',
+                                                className='form-group',
+                                                style={'marginBottom': 0},
                                                 children=[
-                                                    html.Button(
-                                                        id='train-agent-btn',
-                                                        className='btn btn-success',
-                                                        children=[
-                                                            html.I(className='fas fa-play'),
-                                                            ' Start Training'
-                                                        ]
+                                                    html.Label('Learning Rate'),
+                                                    dcc.Input(
+                                                        id='learning-rate',
+                                                        type='number',
+                                                        value=0.001,
+                                                        step=0.0001,
+                                                        min=0.0001,
+                                                        max=0.1,
+                                                        className='input-field',
                                                     ),
-                                                    html.Button(
-                                                        id='stop-training-btn',
-                                                        className='btn btn-danger',
-                                                        children=[
-                                                            html.I(className='fas fa-stop'),
-                                                            ' Stop Training'
-                                                        ]
-                                                    ),
-                                                    html.Button(
-                                                        id='save-model-btn',
-                                                        className='btn btn-primary',
-                                                        children=[
-                                                            html.I(className='fas fa-save'),
-                                                            ' Save Model'
-                                                        ]
-                                                    ),
-                                                    html.Button(
-                                                        id='load-model-btn',
-                                                        className='btn btn-secondary',
-                                                        children=[
-                                                            html.I(className='fas fa-upload'),
-                                                            ' Load Model'
-                                                        ]
-                                                    ),
-                                                ]
+                                                ],
                                             ),
-                                            
                                             html.Div(
-                                                className='training-config',
+                                                className='form-group',
+                                                style={'marginBottom': 0},
                                                 children=[
-                                                    html.H4(children='Hyperparameters'),
-                                                    html.Div(
-                                                        className='config-grid',
-                                                        children=[
-                                                            html.Div(
-                                                                className='form-group',
-                                                                children=[
-                                                                    html.Label(children='Learning Rate'),
-                                                                    dcc.Input(
-                                                                        id='learning-rate',
-                                                                        type='number',
-                                                                        value=0.001,
-                                                                        step=0.0001,
-                                                                        min=0.0001,
-                                                                        max=0.1,
-                                                                        className='input-field'
-                                                                    ),
-                                                                ]
-                                                            ),
-                                                            html.Div(
-                                                                className='form-group',
-                                                                children=[
-                                                                    html.Label(children='Discount Factor (γ)'),
-                                                                    dcc.Input(
-                                                                        id='discount-factor',
-                                                                        type='number',
-                                                                        value=0.99,
-                                                                        step=0.01,
-                                                                        min=0.5,
-                                                                        max=1.0,
-                                                                        className='input-field'
-                                                                    ),
-                                                                ]
-                                                            ),
-                                                            html.Div(
-                                                                className='form-group',
-                                                                children=[
-                                                                    html.Label(children='Batch Size'),
-                                                                    dcc.Input(
-                                                                        id='batch-size',
-                                                                        type='number',
-                                                                        value=32,
-                                                                        step=1,
-                                                                        min=1,
-                                                                        max=256,
-                                                                        className='input-field'
-                                                                    ),
-                                                                ]
-                                                            ),
-                                                            html.Div(
-                                                                className='form-group',
-                                                                children=[
-                                                                    html.Label(children='Target Update Freq'),
-                                                                    dcc.Input(
-                                                                        id='target-update',
-                                                                        type='number',
-                                                                        value=10,
-                                                                        step=1,
-                                                                        min=1,
-                                                                        max=100,
-                                                                        className='input-field'
-                                                                    ),
-                                                                ]
-                                                            ),
-                                                        ]
+                                                    html.Label('Discount Factor (\u03b3)'),
+                                                    dcc.Input(
+                                                        id='discount-factor',
+                                                        type='number',
+                                                        value=0.99,
+                                                        step=0.01,
+                                                        min=0.5,
+                                                        max=1.0,
+                                                        className='input-field',
                                                     ),
-                                                ]
+                                                ],
                                             ),
-                                        ]
+                                            html.Div(
+                                                className='form-group',
+                                                style={'marginBottom': 0},
+                                                children=[
+                                                    html.Label('Batch Size'),
+                                                    dcc.Input(
+                                                        id='batch-size',
+                                                        type='number',
+                                                        value=32,
+                                                        step=1,
+                                                        min=1,
+                                                        max=256,
+                                                        className='input-field',
+                                                    ),
+                                                ],
+                                            ),
+                                            html.Div(
+                                                className='form-group',
+                                                style={'marginBottom': 0},
+                                                children=[
+                                                    html.Label('Target Update Freq'),
+                                                    dcc.Input(
+                                                        id='target-update',
+                                                        type='number',
+                                                        value=10,
+                                                        step=1,
+                                                        min=1,
+                                                        max=100,
+                                                        className='input-field',
+                                                    ),
+                                                ],
+                                            ),
+                                        ],
                                     ),
-                                ]
+                                ],
                             ),
-                        ]
+                        ],
                     ),
-                ]
+                ],
             ),
-        ]
+        ],
     )

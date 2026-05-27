@@ -6301,3 +6301,145 @@ button {
     border-radius: 2px;
 }
 
+
+/* ===================================================================
+   PERFORMANCE PAGE
+   =================================================================== */
+.perf-charts-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.perf-comparison-controls {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.perf-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    gap: 10px;
+    color: var(--text-muted);
+}
+
+.perf-placeholder i {
+    font-size: 28px;
+    opacity: 0.3;
+}
+
+.perf-placeholder p {
+    font-size: 13px;
+    margin: 0;
+}
+
+
+/* ===================================================================
+   AI AGENT PAGE
+   =================================================================== */
+.agent-status-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.agent-status-card {
+    background: var(--bg-input);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color var(--duration) var(--ease-out);
+}
+
+.agent-status-card:hover {
+    border-color: var(--border-hover);
+}
+
+.agent-status-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--text-muted);
+}
+
+.agent-status-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+}
+
+.agent-status-value.idle {
+    color: var(--text-muted);
+    font-family: var(--font-sans);
+    font-size: 14px;
+}
+
+.agent-training-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.agent-control-btns {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.agent-hyper-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.agent-hyper-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 20px;
+    margin-top: 4px;
+    border-top: 1px solid var(--border-subtle);
+}
+
+.agent-hyper-header i {
+    color: var(--accent);
+    font-size: 13px;
+}
+
+.agent-hyper-header h4 {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+
+/* - Responsive overrides ----------------------------------------- */
+
+@media (max-width: 1200px) {
+    .perf-charts-row {
+        grid-template-columns: 1fr;
+    }
+    .agent-status-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .agent-training-row {
+        grid-template-columns: 1fr;
+    }
+    .agent-hyper-grid {
+        grid-template-columns: 1fr;
+    }
+}

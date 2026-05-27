@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>SMARTFLOW Admin Pages - Review Report</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		body { font-family: Inter, ui-sans-serif, system-ui, sans-serif; }
+		.mono { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+		.report-section { border: 1px solid #222226; background: #0a0a0b; position: relative; }
+		.corner-box { position: absolute; width: 20px; height: 20px; border: 1px solid #222226; background: #000; }
+	</style>
+</head>
+<body class="bg-black text-[#fafafa]">
+	<main class="mx-auto w-full max-w-6xl px-5 py-8 md:px-10 md:py-12">
+		<header class="report-section mb-8 p-6 md:p-8">
+			<div class="corner-box left-0 top-0 -translate-x-1/2 -translate-y-1/2"></div>
+			<div class="corner-box right-0 top-0 translate-x-1/2 -translate-y-1/2"></div>
+			<div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+				<div>
+					<div class="mono mb-2 text-xs tracking-widest text-[#666]">// REVIEW</div>
+					<h1 class="text-4xl font-bold tracking-tight md:text-6xl">SMARTFLOW Admin</h1>
+				</div>
+				<div class="mono text-left text-xs text-[#666] md:text-right">
+					<div>COMMANDCODE REPORT</div>
+					<div class="text-[#444]">2026-05-27</div>
+				</div>
+			</div>
+		</header>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="corner-box left-0 top-0 -translate-x-1/2 -translate-y-1/2"></div>
+			<div class="corner-box right-0 top-0 translate-x-1/2 -translate-y-1/2"></div>
+			<div class="grid gap-8 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)]">
+				<div>
+					<div class="mono mb-2 text-xs tracking-widest text-[#666]">// OVERALL</div>
+					<div class="text-6xl font-bold tracking-tight md:text-7xl">29</div>
+					<div class="mt-1 text-lg text-[#666]">/ 50</div>
+					<div class="mt-4 inline-flex border border-[#fbbf24]/30 bg-[#fbbf24]/10 px-3 py-1 text-sm text-[#fbbf24]">NEEDS FOCUS</div>
+				</div>
+				<div>
+					<div class="mono mb-3 text-xs tracking-widest text-[#666]">// TL;DR</div>
+					<p class="text-sm leading-6 text-[#a0a0a0]">Four admin pages that are functional and consistently structured, but share the same visual pattern everywhere with no domain personality. Interaction is the weakest area: action overload in table rows, missing confirmation for destructive operations, no loading states, and no keyboard focus visibility.</p>
+					<p class="mt-4 text-sm leading-6 text-[#fbbf24]">Highest-impact fix: Add loading/feedback states to all callback-driven interactions. Every button click and filter change should show a brief loading indicator.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="mono mb-6 text-xs tracking-widest text-[#666]">// HEURISTIC SCORES</div>
+			<div class="overflow-x-auto">
+				<table class="w-full min-w-[720px] border-collapse text-sm">
+					<thead>
+						<tr class="border-b border-[#222226] text-left mono text-xs text-[#666]">
+							<th class="py-3 pr-4 font-normal">#</th>
+							<th class="py-3 pr-4 font-normal">HEURISTIC</th>
+							<th class="py-3 pr-4 font-normal">SCORE</th>
+							<th class="py-3 font-normal">KEY FINDING</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">1</td>
+							<td class="py-4 pr-4 text-[#fafafa]">First impression</td>
+							<td class="py-4 pr-4 text-[#fbbf24]">5/10</td>
+							<td class="py-4 text-[#a0a0a0]">Generic admin dashboard pattern. All four pages look identical. No traffic simulation identity.</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">2</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Hierarchy</td>
+							<td class="py-4 pr-4 text-[#fbbf24]">6/10</td>
+							<td class="py-4 text-[#a0a0a0]">KPIs are clear, but content sections compete. Pending accounts buried below fold on Users page.</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">3</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Color voice</td>
+							<td class="py-4 pr-4 text-[#fbbf24]">6/10</td>
+							<td class="py-4 text-[#a0a0a0]">Consistent dark theme with semantic badges. But green accent does too many jobs at once.</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">4</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Type voice</td>
+							<td class="py-4 pr-4 text-[#34d399]">7/10</td>
+							<td class="py-4 text-[#a0a0a0]">Clear scale hierarchy. Good monospace for technical values. Some 9-10px labels borderline.</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-4 pr-4 text-[#555]">5</td>
+							<td class="py-4 pr-4 text-[#fafafa]">Interaction feel</td>
+							<td class="py-4 pr-4 text-[#f43f5e]">5/10</td>
+							<td class="py-4 text-[#a0a0a0]">Action overload, no confirmation dialogs, no loading/skeleton states, no keyboard focus.</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="mono mb-6 text-xs tracking-widest text-[#666]">// COGNITIVE LOAD / RISK</div>
+			<div class="grid gap-6 md:grid-cols-2">
+				<div>
+					<div class="mb-3 text-xl font-semibold">Medium</div>
+					<ul class="space-y-3 text-sm text-[#a0a0a0]">
+						<li><span class="mono mr-2 text-[#34d399]">PASS</span>Permission matrix pending-changes workflow is solid</li>
+						<li><span class="mono mr-2 text-[#34d399]">PASS</span>Semantic status badges are consistent and scannable</li>
+						<li><span class="mono mr-2 text-[#34d399]">PASS</span>Backup page two-column layout is well-composed</li>
+						<li><span class="mono mr-2 text-[#fbbf24]">WATCH</span>Action overload in user table rows (5-6 icons per row)</li>
+						<li><span class="mono mr-2 text-[#fbbf24]">WATCH</span>No loading feedback during any callback-driven action</li>
+						<li><span class="mono mr-2 text-[#ef4444]">FAIL</span>Destructive actions fire immediately with no confirmation</li>
+						<li><span class="mono mr-2 text-[#ef4444]">FAIL</span>Restore backup triggers immediate logout with no warning</li>
+						<li><span class="mono mr-2 text-[#ef4444]">FAIL</span>No keyboard focus visibility on any interactive element</li>
+					</ul>
+				</div>
+				<div>
+					<div class="mono mb-3 text-xs tracking-widest text-[#666]">// NEXT MODES</div>
+					<div class="flex flex-wrap gap-2">
+						<span class="border border-[#333] px-3 py-1 text-sm text-[#a0a0a0]">/interaction</span>
+						<span class="border border-[#333] px-3 py-1 text-sm text-[#a0a0a0]">/relayout</span>
+						<span class="border border-[#333] px-3 py-1 text-sm text-[#a0a0a0]">/redesign</span>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="mono mb-6 text-xs tracking-widest text-[#666]">// WHAT'S WORKING</div>
+			<div class="grid gap-4 md:grid-cols-3">
+				<article class="border border-[#1f1f24] p-4">
+					<h2 class="mb-2 text-sm font-semibold">Permission Matrix UX</h2>
+					<p class="text-sm leading-6 text-[#a0a0a0]">The store-based pending-changes workflow with Save/Reset and confirmation modal for protected permissions is well-designed. The selected column highlight is the strongest visual device across all admin pages.</p>
+				</article>
+				<article class="border border-[#1f1f24] p-4">
+					<h2 class="mb-2 text-sm font-semibold">Semantic Badge System</h2>
+					<p class="text-sm leading-6 text-[#a0a0a0]">Status badges (green=active, gray=inactive, purple=admin) and audit action pills (green=create, red=delete, blue=update) carry meaning without reading the text. Consistent across all pages.</p>
+				</article>
+				<article class="border border-[#1f1f24] p-4">
+					<h2 class="mb-2 text-sm font-semibold">Backup Page Composition</h2>
+					<p class="text-sm leading-6 text-[#a0a0a0]">The two-column layout (backup table + action cards) is the most distinctive and well-composed of all admin pages. Clear separation of concerns between viewing and acting.</p>
+				</article>
+			</div>
+		</section>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="mono mb-6 text-xs tracking-widest text-[#666]">// PRIORITY ISSUES</div>
+			<div class="space-y-5">
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#f43f5e]">P0</div>
+					<h2 class="mb-2 text-lg font-semibold">No Loading States During Callbacks</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">When an admin clicks "Save Changes" on the permission matrix, filters users, creates a backup, or takes any callback-driven action, the UI freezes until the response returns. There is no spinner, skeleton, disabled state, or any visual feedback that the system is processing.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Add loading indicators to all buttons during callback processing. Use Dash dcc.Loading components or button disabled+spinner states. Apply to: filter inputs, save/reset buttons, backup/restore/delete actions, user action buttons.</div>
+				</article>
+
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#f43f5e]">P1</div>
+					<h2 class="mb-2 text-lg font-semibold">Action Overload in User Table Rows</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">Each user row has up to 6 icon buttons (View, Deactivate/Activate, Promote, Reset Password, Delete) all at the same size and visual weight. The delete button (most destructive) is visually identical to the view button until hover. This creates cognitive overhead and increases accidental destructive action risk.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Keep View as the primary icon button. Move Deactivate, Promote, Reset Password, and Delete into a dropdown menu or expand-on-hover action cluster. Add red color differentiation to destructive actions immediately, not just on hover.</div>
+				</article>
+
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#f43f5e]">P1</div>
+					<h2 class="mb-2 text-lg font-semibold">No Confirmation for Destructive Operations</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">Deactivate user, delete user, delete backup, and restore backup all fire immediately with no confirmation dialog. Only the permission matrix has a confirmation modal. The restore operation is especially dangerous because it triggers an immediate logout and database overwrite.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Reuse the existing create_modal pattern from admin_roles. Add confirmation modals for: delete user ("Permanently delete [username]?"), deactivate user ("Deactivate [username]'s account?"), delete backup, and restore backup ("This will overwrite the current database and log you out.").</div>
+				</article>
+
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#fbbf24]">P2</div>
+					<h2 class="mb-2 text-lg font-semibold">Visual Monotony Across Admin Pages</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">All four pages use the identical composition pattern: KPI row, section header with green icon, filter toolbar, dark data table. There is no page-specific identity. An admin navigating between Users, Roles, Audit, and Backups has no visual anchor to orient themselves.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Give each admin page a distinctive layout variation or page-specific accent color. For example: Users could use a card-grid for pending accounts; Audit could use a timeline-style layout; Backups could keep the current two-column but with a visual storage meter.</div>
+				</article>
+
+				<article class="border border-[#2a1d22] bg-[#110b0d] p-5">
+					<div class="mono mb-2 text-xs text-[#fbbf24]">P2</div>
+					<h2 class="mb-2 text-lg font-semibold">Audit Filter Toolbar Crowding</h2>
+					<p class="mb-4 text-sm leading-6 text-[#a0a0a0]">Five filter controls (search, action type, user, date range, count label) are crammed into one row. The date range picker is particularly wide and crowds other controls, especially on screens under 1400px.</p>
+					<div class="border-l border-[#fbbf24] pl-4 text-sm leading-6 text-[#fbbf24]">FIX: Restack the toolbar into two rows: search + action type on top, user filter + date range + count on bottom. Or use a collapsible "Advanced Filters" panel for the date range and user filter.</div>
+				</article>
+			</div>
+		</section>
+
+		<section class="report-section mb-8 p-6 md:p-8">
+			<div class="mono mb-6 text-xs tracking-widest text-[#666]">// RECOMMENDATIONS</div>
+			<div class="overflow-x-auto">
+				<table class="w-full min-w-[720px] border-collapse text-sm">
+					<thead>
+						<tr class="border-b border-[#222226] text-left mono text-xs text-[#666]">
+							<th class="py-3 pr-4 font-normal">PRIORITY</th>
+							<th class="py-3 pr-4 font-normal">FIX</th>
+							<th class="py-3 font-normal">MODE</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-3 pr-4 text-[#f43f5e] mono text-xs">P0</td>
+							<td class="py-3 pr-4 text-[#a0a0a0]">Add loading/feedback states to all callback-driven interactions</td>
+							<td class="py-3 text-[#666] mono text-xs">/interaction</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-3 pr-4 text-[#f43f5e] mono text-xs">P1</td>
+							<td class="py-3 pr-4 text-[#a0a0a0]">Replace action overload with contextual action menu</td>
+							<td class="py-3 text-[#666] mono text-xs">/interaction + /writing</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-3 pr-4 text-[#f43f5e] mono text-xs">P1</td>
+							<td class="py-3 pr-4 text-[#a0a0a0]">Add confirmation dialogs for all destructive operations</td>
+							<td class="py-3 text-[#666] mono text-xs">/interaction</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-3 pr-4 text-[#fbbf24] mono text-xs">P2</td>
+							<td class="py-3 pr-4 text-[#a0a0a0]">Add keyboard focus styles to all interactive elements</td>
+							<td class="py-3 text-[#666] mono text-xs">/interaction</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-3 pr-4 text-[#fbbf24] mono text-xs">P2</td>
+							<td class="py-3 pr-4 text-[#a0a0a0]">Give each admin page a distinctive visual identity</td>
+							<td class="py-3 text-[#666] mono text-xs">/redesign</td>
+						</tr>
+						<tr class="border-b border-[#1a1a1e]">
+							<td class="py-3 pr-4 text-[#fbbf24] mono text-xs">P2</td>
+							<td class="py-3 pr-4 text-[#a0a0a0]">Restack audit filter toolbar for better spacing</td>
+							<td class="py-3 text-[#666] mono text-xs">/relayout</td>
+						</tr>
+						<tr>
+							<td class="py-3 pr-4 text-[#fbbf24] mono text-xs">P2</td>
+							<td class="py-3 pr-4 text-[#a0a0a0]">Add ARIA labels to all icon-only buttons</td>
+							<td class="py-3 text-[#666] mono text-xs">/writing</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</section>
+
+		<footer class="mono py-8 text-center text-xs tracking-widest text-[#444]">
+			Generated with CommandCode - 2026-05-27
+		</footer>
+	</main>
+</body>
+</html>
