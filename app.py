@@ -12,7 +12,7 @@ import database
 import auth
 
 from pages import login, register, dashboard, simulation, scenarios
-from pages import performance, ai_agent, runs_reports
+from pages import performance, ai_agent, runs_reports, live_traffic
 from pages import change_password, admin_users, admin_roles
 from pages import admin_audit, admin_backups
 from pages import profile_settings, help_about
@@ -54,6 +54,7 @@ PAGE_ROUTES = {
     '/dashboard':       ('dashboard', dashboard),
     '/simulation':      ('simulation', simulation),
     '/scenarios':       ('scenarios', scenarios),
+    '/live-traffic':    ('live-traffic', live_traffic),
     '/performance':     ('performance', performance),
     '/ai-agent':        ('ai-agent', ai_agent),
     '/runs-reports':    ('runs-reports', runs_reports),

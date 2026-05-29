@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 
 import plotly.graph_objects as go
 from dash import dcc, html
+from components.traffic_map import build_traffic_map, build_traffic_map_legend
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -352,13 +353,25 @@ def create_simulation_view() -> html.Div:
             ]),
 
             # ── Viewport ────────────────────────────────────────────
-            html.Div(className='sim-viewport', children=[
-                html.Img(
-                    id='sim-image',
-                    src='/assets/traffic_intersection.png',
-                    alt='Live Traffic Simulation',
-                    className='sim-image',
-                    style={'display': 'none'},
+            html.Div(id='sim-viewport', className='sim-viewport', children=[
+                html.Div(
+                    id='simulation-map-shell',
+                    className='simulation-map-shell',
+                    children=[
+                        html.Div(
+                            id='traffic-map-container',
+                            className='traffic-map-container',
+                            style={'display': 'none'},
+                            children=build_traffic_map(),
+                        ),
+                        html.Div(
+                            className='simulation-map-legend',
+                            children=[
+                                html.Div('Intersection operator map', className='simulation-map-label'),
+                                build_traffic_map_legend(),
+                            ],
+                        ),
+                    ],
                 ),
                 html.Div(
                     id='three-container',
@@ -381,52 +394,50 @@ def create_simulation_view() -> html.Div:
                         ),
                     ],
                 ),
-
-                # Floating overlays
-                html.Div(className='sim-overlay overlay-top-left', children=[
-                    html.Div('Intersection', className='overlay-label'),
-                    html.Div('Tagum City — Pioneer Ave & Apokon Rd',
-                             className='overlay-value'),
-                ]),
-                html.Div(className='sim-overlay overlay-bottom-left', children=[
-                    html.Div('Signal Phase', className='overlay-label'),
-                    html.Div(className='overlay-value phase-green', id='sim-phase-display', children=[
-                        html.I(className='fa-solid fa-traffic-light'),
-                        ' Phase 1 — NS Green',
+                html.Div(id='simulation-map-overlays', className='simulation-map-overlays', children=[
+                    html.Div(className='sim-overlay overlay-top-left', children=[
+                        html.Div('Intersection', className='overlay-label'),
+                        html.Div('Tagum City — Pioneer Ave & Apokon Rd',
+                                 className='overlay-value'),
                     ]),
-                ]),
-                html.Div(
-                    id='phase-timer',
-                    className='sim-overlay overlay-bottom-right',
-                    children=[
-                        html.Div('Phase Timer', className='overlay-label'),
-                        html.Div(
-                            className='overlay-value timer-countdown',
-                            children=[
-                                html.Span(
-                                    '18',
-                                    id='phase-timer-seconds',
-                                    className='phase-seconds',
-                                ),
-                                html.Span('s', className='phase-unit'),
-                            ],
-                        ),
-                    ],
-                ),
-
-                # Vehicle-count stat chips
-                html.Div(className='sim-overlay overlay-stats', children=[
-                    html.Span(className='stat-chip', children=[
-                        html.I(className='fa-solid fa-car'),
-                        html.Span(' 0 vehicles', id='stat-vehicles'),
+                    html.Div(className='sim-overlay overlay-bottom-left', children=[
+                        html.Div('Signal Phase', className='overlay-label'),
+                        html.Div(className='overlay-value phase-green', id='sim-phase-display', children=[
+                            html.I(className='fa-solid fa-traffic-light'),
+                            ' Phase 1 — NS Green',
+                        ]),
                     ]),
-                    html.Span(className='stat-chip', children=[
-                        html.I(className='fa-solid fa-person-walking'),
-                        html.Span(' 0 peds', id='stat-pedestrians'),
-                    ]),
-                    html.Span(className='stat-chip emergency', children=[
-                        html.I(className='fa-solid fa-truck-medical'),
-                        html.Span(' 0 EV', id='stat-emergency'),
+                    html.Div(
+                        id='phase-timer',
+                        className='sim-overlay overlay-bottom-right',
+                        children=[
+                            html.Div('Phase Timer', className='overlay-label'),
+                            html.Div(
+                                className='overlay-value timer-countdown',
+                                children=[
+                                    html.Span(
+                                        '18',
+                                        id='phase-timer-seconds',
+                                        className='phase-seconds',
+                                    ),
+                                    html.Span('s', className='phase-unit'),
+                                ],
+                            ),
+                        ],
+                    ),
+                    html.Div(className='sim-overlay overlay-stats', children=[
+                        html.Span(className='stat-chip', children=[
+                            html.I(className='fa-solid fa-car'),
+                            html.Span(' 0 vehicles', id='stat-vehicles'),
+                        ]),
+                        html.Span(className='stat-chip', children=[
+                            html.I(className='fa-solid fa-person-walking'),
+                            html.Span(' 0 peds', id='stat-pedestrians'),
+                        ]),
+                        html.Span(className='stat-chip emergency', children=[
+                            html.I(className='fa-solid fa-truck-medical'),
+                            html.Span(' 0 EV', id='stat-emergency'),
+                        ]),
                     ]),
                 ]),
             ]),

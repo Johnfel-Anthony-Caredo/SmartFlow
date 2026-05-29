@@ -9,6 +9,9 @@ from . import controllers
 from . import pedestrians
 from . import metrics
 from . import engine
+from . import sumo_config
+from . import sumo_state
+from . import sumo_engine
 
 __all__ = [
     "constants",
@@ -20,4 +23,7 @@ __all__ = [
     "pedestrians",
     "metrics",
     "engine",
+    "sumo_config",
+    "sumo_state",
+    "sumo_engine",
 ]

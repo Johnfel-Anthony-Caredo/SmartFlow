@@ -6,10 +6,136 @@ All interactive callbacks wired to the real simulation engine.
 from datetime import datetime
 from dash import callback, Output, Input, State, html, no_update, ctx
 from flask import session
+import plotly.graph_objects as go
 
+from components.traffic_map import build_traffic_map
 import services.simulation_service as sim
 import services.metrics_service as metrics_svc
 import services.scenario_service as scenario_svc
+from simulation.sumo_state import canonical_signal_states
+
+
+def _chart_layout(title: str, yaxis_title: str = "") -> dict:
+    return dict(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)',
+        font=dict(family='Inter, sans-serif', color='#64748b', size=10),
+        margin=dict(l=35, r=10, t=30, b=30),
+        xaxis=dict(gridcolor='rgba(255,255,255,0.03)', tickfont=dict(size=9), showline=False),
+        yaxis=dict(
+            gridcolor='rgba(255,255,255,0.03)',
+            tickfont=dict(size=9),
+            showline=False,
+            title=dict(text=yaxis_title, font=dict(size=10, color='#64748b')),
+        ),
+        hovermode='x unified',
+        hoverlabel=dict(
+            bgcolor='rgba(10,15,26,0.95)',
+            bordercolor='rgba(255,255,255,0.08)',
+            font=dict(family='Inter', size=11, color='#94a3b8'),
+        ),
+        title=dict(text=title, font=dict(size=12, color='#94a3b8')),
+        legend=dict(orientation='h', yanchor='bottom', y=1.02, xanchor='center', x=0.5, font=dict(size=10)),
+    )
+
+
+def _build_traffic_flow_figure(history: list[dict]) -> go.Figure:
+    labels = [f"{point.get('time', 0):.0f}s" for point in history]
+    fig = go.Figure()
+    fill_colors = {
+        'north': 'rgba(0,230,118,0.12)',
+        'south': 'rgba(66,165,245,0.12)',
+        'east': 'rgba(171,71,188,0.12)',
+        'west': 'rgba(255,167,38,0.12)',
+    }
+    for key, label, color in (
+        ('north', 'North', '#00e676'),
+        ('south', 'South', '#42a5f5'),
+        ('east', 'East', '#ab47bc'),
+        ('west', 'West', '#ffa726'),
+    ):
+        fig.add_trace(go.Scatter(
+            x=labels,
+            y=[point.get(key, 0) for point in history],
+            name=label,
+            mode='lines',
+            line=dict(color=color, width=2),
+            fill='tozeroy',
+            fillcolor=fill_colors[key],
+        ))
+    fig.update_layout(**_chart_layout('Live Queue Pressure by Approach', 'Queued vehicles'))
+    return fig
+
+
+def _build_wait_time_figure(wait_history: list[dict], queue_history: list[dict]) -> go.Figure:
+    labels = [f"{point.get('time', 0):.0f}s" for point in wait_history]
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=labels,
+        y=[point.get('value', 0) for point in wait_history],
+        name='Avg Wait',
+        mode='lines',
+        line=dict(color='#00e676', width=2),
+        fill='tozeroy',
+        fillcolor='rgba(0,230,118,0.12)',
+    ))
+    fig.add_trace(go.Scatter(
+        x=[f"{point.get('time', 0):.0f}s" for point in queue_history],
+        y=[point.get('value', 0) for point in queue_history],
+        name='Avg Queue',
+        mode='lines',
+        line=dict(color='#ef5350', width=2, dash='dash'),
+    ))
+    fig.update_layout(**_chart_layout('Live Wait vs Queue Trend', 'Seconds / vehicles'))
+    return fig
+
+
+def _format_elapsed(seconds: float) -> str:
+    h, rem = divmod(int(seconds), 3600)
+    mt, st = divmod(rem, 60)
+    return f'{h:02d}:{mt:02d}:{st:02d}'
+
+
+def _format_event_time(value) -> str:
+    if not isinstance(value, (int, float)):
+        return str(value)
+    return f"{int(value // 60):02d}:{int(value % 60):02d}"
+
+
+def _build_event_items(raw_events: list[dict], class_prefix: str = 'event', limit: int = 10) -> list:
+    icon_map = {
+        'priority': 'fa-solid fa-truck-medical',
+        'signal': 'fa-solid fa-traffic-light',
+        'warning': 'fa-solid fa-triangle-exclamation',
+        'info': 'fa-solid fa-circle-info',
+    }
+    if not raw_events:
+        return [html.Div(className=f'{class_prefix}-item info', children=[
+            html.Span('--:--', className=f'{class_prefix}-time'),
+            html.Span(className=f'{class_prefix}-icon', children=[html.I(className='fa-solid fa-circle-info')]),
+            html.Span('No live events yet', className=f'{class_prefix}-text'),
+        ])]
+
+    items = []
+    for ev in raw_events[-limit:]:
+        ev_kind = ev.get('kind', 'info')
+        ev_msg = ev.get('message', '')
+        items.append(html.Div(className=f'{class_prefix}-item {ev_kind}', children=[
+            html.Span(_format_event_time(ev.get('time', 0)), className=f'{class_prefix}-time'),
+            html.Span(className=f'{class_prefix}-icon', children=[
+                html.I(className=icon_map.get(ev_kind, 'fa-solid fa-circle-info')),
+            ]),
+            html.Span(ev_msg, className=f'{class_prefix}-text'),
+        ]))
+    return items
+
+
+def _status_badge(status: str):
+    if status == 'running':
+        return [html.Span(className='status-dot'), ' Running'], 'status-badge running'
+    if status == 'paused':
+        return [html.Span(className='status-dot'), ' Paused'], 'status-badge paused'
+    return [html.Span(className='status-dot'), ' Stopped'], 'status-badge stopped'
 
 
 def register_callbacks(app):
@@ -80,10 +206,12 @@ def register_callbacks(app):
          Output('phase-timer-seconds', 'children'),
          Output('stat-vehicles', 'children'),
          Output('stat-pedestrians', 'children'),
+         Output('stat-emergency', 'children'),
          Output('kpi-wait-time-value', 'children'),
          Output('kpi-queue-length-value', 'children'),
          Output('kpi-throughput-value', 'children'),
          Output('kpi-pedestrians-value', 'children'),
+         Output('kpi-emergency-value', 'children'),
          Output('events-feed', 'children')],
         Input('sim-engine-tick', 'data'),
         State('url', 'pathname'),
@@ -92,10 +220,11 @@ def register_callbacks(app):
     def update_dashboard_stats(_ts, pathname):
         path = pathname.rstrip('/') if pathname else ''
         if path not in ('/dashboard', '/simulation'):
-            return [no_update] * 9
+            return [no_update] * 11
 
         state = sim.get_state()
         m = state['metrics']
+        dashboard = state.get('dashboard', {})
 
         # Phase
         phase = state.get('phase', 'NS_GREEN')
@@ -114,39 +243,125 @@ def register_callbacks(app):
         avg_queue = str(m.get('avg_queue', 0))
         throughput = str(m.get('throughput', 0))
         ped_completed = str(m.get('total_pedestrians_completed', 0))
+        emergency_count = str(dashboard.get('emergency_active_count', 0))
 
-        # Events feed
-        raw_events = state.get('events', [])
-        event_items = []
-        for ev in raw_events[-10:]:
-            ev_kind = ev.get('kind', 'info')
-            ev_msg = ev.get('message', '')
-            et = ev.get('time', 0)
-            ft = f"{int(et // 60):02d}:{int(et % 60):02d}:{int((et % 1) * 60):02d}" if isinstance(et, (int, float)) else str(et)
-            icon_map = {
-                'priority': 'fa-solid fa-truck-medical',
-                'signal': 'fa-solid fa-traffic-light',
-                'warning': 'fa-solid fa-triangle-exclamation',
-                'info': 'fa-solid fa-circle-info',
-            }
-            event_items.append(
-                html.Div(className=f'event-item {ev_kind}', children=[
-                    html.Span(ft, className='event-time'),
-                    html.Span(className='event-icon', children=[html.I(className=icon_map.get(ev_kind, 'fa-solid fa-circle-info'))]),
-                    html.Span(ev_msg, className='event-text'),
-                ])
-            )
+        event_items = _build_event_items(state.get('events', []), limit=10)
 
         return (
             [phase_icon, phase_text],
             phase_rem,
             f' {v_count} vehicles',
             f' {p_count} peds',
+            f' {emergency_count} EV',
             avg_wait, avg_queue, throughput, ped_completed,
+            emergency_count,
             event_items,
         )
 
+    @app.callback(
+        [Output('traffic-flow-chart', 'figure'),
+         Output('wait-time-chart', 'figure')],
+        Input('sim-engine-tick', 'data'),
+        State('url', 'pathname'),
+        prevent_initial_call=True
+    )
+    def update_dashboard_charts(_ts, pathname):
+        path = pathname.rstrip('/') if pathname else ''
+        if path != '/dashboard':
+            return no_update, no_update
+
+        charts = sim.get_state().get('charts', {})
+        traffic_history = charts.get('traffic_flow', [])
+        wait_history = charts.get('wait_time', [])
+        queue_history = charts.get('queue_length', [])
+        return (
+            _build_traffic_flow_figure(traffic_history),
+            _build_wait_time_figure(wait_history, queue_history),
+        )
+
     # ── CONTROL BUTTONS (dashboard) ───────────────────────────
+    @app.callback(
+        Output('traffic-map-container', 'children'),
+        Input('sim-engine-tick', 'data'),
+        State('url', 'pathname'),
+        prevent_initial_call=False
+    )
+    def update_dashboard_traffic_map(_ts, pathname):
+        path = pathname.rstrip('/') if pathname else ''
+        if path != '/dashboard':
+            return no_update
+        return build_traffic_map(sim.get_state())
+
+    @app.callback(
+        [Output('lt-map-container', 'children'),
+         Output('lt-runtime-status', 'children'),
+         Output('lt-runtime-status', 'className'),
+         Output('lt-runtime-time', 'children'),
+         Output('lt-phase-name', 'children'),
+         Output('lt-phase-remaining', 'children'),
+         Output('lt-signal-state-list', 'children'),
+         Output('lt-scenario-overlay', 'children'),
+         Output('lt-vehicle-count', 'children'),
+         Output('lt-pedestrian-count', 'children'),
+         Output('lt-queue-count', 'children'),
+         Output('lt-wait-time', 'children'),
+         Output('lt-emergency-count', 'children'),
+         Output('lt-event-feed', 'children'),
+         Output('lt-traffic-flow-chart', 'figure'),
+         Output('lt-wait-time-chart', 'figure')],
+        Input('sim-engine-tick', 'data'),
+        State('url', 'pathname'),
+        prevent_initial_call=False
+    )
+    def update_live_traffic_page(_ts, pathname):
+        path = pathname.rstrip('/') if pathname else ''
+        if path != '/live-traffic':
+            return [no_update] * 16
+
+        state = sim.get_state()
+        metrics = state.get('metrics', {})
+        dashboard = state.get('dashboard', {})
+        charts = state.get('charts', {})
+        queues = state.get('queues', {})
+        phase = state.get('phase', 'NS_GREEN')
+        ns_state, ew_state = canonical_signal_states(phase)
+        status_children, status_class = _status_badge(state.get('status', 'stopped'))
+        constraint = state.get('visual', {}).get('constraint_marker', {})
+        constraint_text = constraint.get('label', 'No active disruption') if constraint.get('active') else 'No active disruption'
+
+        signal_rows = [
+            html.Div(className='lt-signal-state-row', children=[
+                html.Span('NS approaches'),
+                html.Strong(ns_state.title(), className=f'signal-{ns_state}'),
+            ]),
+            html.Div(className='lt-signal-state-row', children=[
+                html.Span('EW approaches'),
+                html.Strong(ew_state.title(), className=f'signal-{ew_state}'),
+            ]),
+        ]
+
+        traffic_history = charts.get('traffic_flow', [])
+        wait_history = charts.get('wait_time', [])
+        queue_history = charts.get('queue_length', [])
+        return (
+            build_traffic_map(state),
+            status_children,
+            status_class,
+            _format_elapsed(state.get('time', 0)),
+            phase.replace('_', ' '),
+            f"{int(state.get('phase_remaining', 0))}s",
+            signal_rows,
+            constraint_text,
+            str(state.get('vehicle_count', 0)),
+            str(state.get('pedestrian_count', 0)),
+            str(sum(int(value or 0) for value in queues.values())),
+            f"{metrics.get('avg_wait', 0)}s",
+            str(dashboard.get('emergency_active_count', 0)),
+            _build_event_items(state.get('events', []), class_prefix='lt-event', limit=12),
+            _build_traffic_flow_figure(traffic_history),
+            _build_wait_time_figure(wait_history, queue_history),
+        )
+
     @app.callback(
         Output('sim-engine-tick', 'data', allow_duplicate=True),
         [Input('btn-start', 'n_clicks'),
@@ -193,8 +408,13 @@ def register_callbacks(app):
         [Output('sim-elapsed', 'children'),
          Output('sim-time', 'children'),
          Output('sim-steps', 'children'),
+         Output('sim-active-scenario', 'children'),
+         Output('sim-control-mode', 'children'),
          Output('sim-current-status', 'children'),
          Output('sim-current-status', 'className'),
+         Output('sim-last-action', 'children'),
+         Output('sim-last-error', 'children'),
+         Output('sim-run-id', 'children'),
          Output('simulation-log', 'children')],
         Input('sim-engine-tick', 'data'),
         prevent_initial_call=True
@@ -204,6 +424,7 @@ def register_callbacks(app):
         s = state['status']
         t = state['time']
         m = state['metrics']
+        dashboard = state.get('dashboard', {})
 
         elapsed = f"{int(t // 3600):02d}:{int((t % 3600) // 60):02d}:{int(t % 60):02d}"
         steps = str(m.get('step_count', 0))
@@ -241,7 +462,19 @@ def register_callbacks(app):
                     html.Span(ev_msg, className='event-text'),
                 ]))
 
-        return elapsed, elapsed, steps, status_text, status_cls, log_items
+        return (
+            elapsed,
+            elapsed,
+            steps,
+            dashboard.get('current_scenario_name', 'Unknown'),
+            dashboard.get('control_mode_label', 'Fixed-Time'),
+            status_text,
+            status_cls,
+            dashboard.get('last_action', '—'),
+            dashboard.get('last_error', 'None'),
+            dashboard.get('run_id', '—'),
+            log_items,
+        )
 
     # ── SCENARIO APPLY (dashboard) ────────────────────────────
     @app.callback(
@@ -326,6 +559,9 @@ def register_callbacks(app):
             'ew_state': ew_state,
             'vehicles': state.get('vehicles', [])[:50],
             'pedestrians': state.get('pedestrians', [])[:20],
+            'queues': state.get('queues', {}),
+            'visual': state.get('visual', {}),
+            'scenario': state.get('scenario', {}),
         }
         return json.dumps(payload)
 
@@ -333,24 +569,47 @@ def register_callbacks(app):
     app.clientside_callback(
         """
         function(n_3d, n_map) {
-            const img = document.getElementById('sim-image');
+            const map = document.getElementById('traffic-map-container');
             const c3d = document.getElementById('three-container');
-            if (!img || !c3d) return ['toggle-btn active', 'toggle-btn'];
+            if (!map || !c3d) {
+                return [
+                    'toggle-btn active',
+                    'toggle-btn',
+                    'sim-viewport',
+                    'simulation-map-shell',
+                    'simulation-map-overlays',
+                ];
+            }
 
             const triggered = dash_clientside.callback_context.triggered_id;
             if (triggered === 'btn-map-view') {
-                img.style.display = 'block';
+                map.style.display = 'block';
                 c3d.style.display = 'none';
-                return ['toggle-btn', 'toggle-btn active'];
+                return [
+                    'toggle-btn',
+                    'toggle-btn active',
+                    'sim-viewport map-mode',
+                    'simulation-map-shell active',
+                    'simulation-map-overlays hidden',
+                ];
             }
             // Default or btn-3d-view
-            img.style.display = 'none';
+            map.style.display = 'none';
             c3d.style.display = 'block';
-            return ['toggle-btn active', 'toggle-btn'];
+            return [
+                'toggle-btn active',
+                'toggle-btn',
+                'sim-viewport',
+                'simulation-map-shell',
+                'simulation-map-overlays',
+            ];
         }
         """,
         [Output('btn-3d-view', 'className'),
-         Output('btn-map-view', 'className')],
+         Output('btn-map-view', 'className'),
+         Output('sim-viewport', 'className'),
+         Output('simulation-map-shell', 'className'),
+         Output('simulation-map-overlays', 'className')],
         [Input('btn-3d-view', 'n_clicks'),
          Input('btn-map-view', 'n_clicks')],
         prevent_initial_call=True

@@ -8,147 +8,218 @@ import auth
 import database
 
 
+def _auth_field(input_id, label, placeholder, input_type='text', auto_complete=None, hint=''):
+    input_props = {
+        'id': input_id,
+        'type': input_type,
+        'placeholder': placeholder,
+        'className': 'input-field',
+    }
+
+    if auto_complete:
+        input_props['autoComplete'] = auto_complete
+
+    return html.Div(
+        className='auth-field form-group',
+        children=[
+            html.Label(htmlFor=input_id, children=label),
+            html.Div(
+                className='auth-field-shell',
+                children=dcc.Input(**input_props)
+            ),
+            html.Div(className='auth-field-hint', children=hint),
+        ]
+    )
+
+
+def _auth_section(title, children):
+    return html.Div(
+        className='auth-form-section',
+        children=[
+            html.Div(className='auth-section-label', children=title),
+            html.Div(className='auth-section-fields', children=children),
+        ]
+    )
+
+
 def layout():
     return html.Div(
-        className='auth-page',
+        className='auth-page auth-page-register',
         children=[
             html.Div(
-                className='auth-container',
+                className='auth-shell auth-shell-register',
                 children=[
-                    html.Div(
-                        className='auth-header',
+                    html.Section(
+                        className='auth-visual-panel',
                         children=[
-                            html.Img(
-                                src='/assets/logo.svg',
-                                className='auth-logo',
-                                alt='SMARTFLOW'
+                            html.Div(
+                                className='auth-visual-nav',
+                                children=[
+                                    html.Div(
+                                        className='auth-brand-lockup',
+                                        children=[
+                                            html.Img(src='/assets/logo.svg', className='auth-brand-mark', alt='SMARTFLOW'),
+                                            html.Div(
+                                                children=[
+                                                    html.Span('SMARTFLOW', className='auth-brand-name'),
+                                                    html.Span('Research Lab Access', className='auth-brand-subline'),
+                                                ]
+                                            ),
+                                        ]
+                                    ),
+                                    dcc.Link(
+                                        href='/dashboard',
+                                        className='auth-back-link',
+                                        children=[
+                                            html.Span('Open dashboard'),
+                                            html.I(className='fas fa-arrow-right'),
+                                        ]
+                                    ),
+                                ]
                             ),
-                            html.H1(className='auth-title', children='SMARTFLOW'),
-                            html.P(
-                                className='auth-subtitle',
-                                children='AI-Driven Traffic Simulation Platform'
+                            html.Div(
+                                className='auth-traffic-scene',
+                                children=[
+                                    html.Div(className='scene-grid'),
+                                    html.Div(className='scene-road scene-road-east-west'),
+                                    html.Div(className='scene-road scene-road-north-south'),
+                                    html.Div(className='scene-road scene-road-diagonal'),
+                                    html.Div(className='scene-intersection-core'),
+                                    html.Div(className='scene-crosswalk scene-crosswalk-north'),
+                                    html.Div(className='scene-crosswalk scene-crosswalk-east'),
+                                    html.Div(className='scene-car scene-car-green'),
+                                    html.Div(className='scene-car scene-car-amber'),
+                                    html.Div(className='scene-car scene-car-white'),
+                                    html.Div(className='scene-signal scene-signal-a'),
+                                    html.Div(className='scene-signal scene-signal-b'),
+                                    html.Div(className='scene-pulse scene-pulse-one'),
+                                    html.Div(className='scene-pulse scene-pulse-two'),
+                                ]
+                            ),
+                            html.Div(
+                                className='auth-visual-copy',
+                                children=[
+                                    html.P(className='auth-kicker', children='Simulation workspace'),
+                                    html.H2(children='Join the team improving adaptive traffic control.'),
+                                    html.P(
+                                        children='Create an account for scenario experiments, SUMO runs, performance reports, and RL controller analysis.'
+                                    ),
+                                ]
+                            ),
+                            html.Div(
+                                className='auth-proof-row',
+                                children=[
+                                    html.Div(className='auth-proof-pill', children=[html.Span('Data'), html.Strong('SQLite')]),
+                                    html.Div(className='auth-proof-pill', children=[html.Span('Signals'), html.Strong('Fixed + RL')]),
+                                    html.Div(className='auth-proof-pill', children=[html.Span('Access'), html.Strong('Role based')]),
+                                ]
                             ),
                         ]
                     ),
-                    
-                    html.Div(
-                        className='auth-form',
+                    html.Section(
+                        className='auth-form-panel',
                         children=[
-                            html.H2(className='form-title', children='Create Account'),
-                            
                             html.Div(
-                                id='register-error',
-                                className='alert alert-error hidden',
-                                children=''
-                            ),
-                            
-                            html.Div(
-                                id='register-success',
-                                className='alert alert-success hidden',
-                                children=''
-                            ),
-                            
-                            html.Div(
-                                className='form-group',
-                                children=[
-                                    html.Label(
-                                        htmlFor='fullname-input',
-                                        children='Full Name'
-                                    ),
-                                    dcc.Input(
-                                        id='fullname-input',
-                                        type='text',
-                                        placeholder='Enter your full name',
-                                        className='input-field'
-                                    ),
-                                ]
-                            ),
-                            
-                            html.Div(
-                                className='form-group',
-                                children=[
-                                    html.Label(
-                                        htmlFor='reg-username-input',
-                                        children='Username'
-                                    ),
-                                    dcc.Input(
-                                        id='reg-username-input',
-                                        type='text',
-                                        placeholder='Choose a username',
-                                        className='input-field',
-                                        autoComplete='username'
-                                    ),
-                                ]
-                            ),
-                            
-                            html.Div(
-                                className='form-row',
+                                className='auth-form-card',
                                 children=[
                                     html.Div(
-                                        className='form-group',
+                                        className='auth-form-header',
                                         children=[
-                                            html.Label(
-                                                htmlFor='reg-password-input',
-                                                children='Password'
-                                            ),
-                                            dcc.Input(
-                                                id='reg-password-input',
-                                                type='password',
-                                                placeholder='Create a password',
-                                                className='input-field',
-                                                autoComplete='new-password'
+                                            html.Div(className='auth-form-eyebrow', children='Request workspace access'),
+                                            html.H1(className='auth-form-title', children='Create account'),
+                                            html.P(
+                                                className='auth-form-description',
+                                                children='Set up your SmartFlow profile. Admins can adjust roles after registration.'
                                             ),
                                         ]
                                     ),
                                     html.Div(
-                                        className='form-group',
+                                        className='auth-form-content',
                                         children=[
-                                            html.Label(
-                                                htmlFor='reg-confirm-input',
-                                                children='Confirm Password'
+                                            html.Div(
+                                                id='register-error',
+                                                className='alert alert-error hidden',
+                                                children=''
                                             ),
-                                            dcc.Input(
-                                                id='reg-confirm-input',
-                                                type='password',
-                                                placeholder='Confirm your password',
-                                                className='input-field',
-                                                autoComplete='new-password'
+                                            html.Div(
+                                                id='register-success',
+                                                className='alert alert-success hidden',
+                                                children=''
+                                            ),
+                                            _auth_section(
+                                                'Identity',
+                                                [
+                                                    _auth_field(
+                                                        'fullname-input',
+                                                        'Full Name',
+                                                        'Enter your full name',
+                                                        auto_complete='name',
+                                                        hint='Shown on reports, audits, and administrator screens.'
+                                                    ),
+                                                    _auth_field(
+                                                        'email-input',
+                                                        'Email',
+                                                        'your.email@example.com',
+                                                        input_type='email',
+                                                        auto_complete='email',
+                                                        hint='Optional, but useful for account recovery.'
+                                                    ),
+                                                ]
+                                            ),
+                                            _auth_section(
+                                                'Account',
+                                                [
+                                                    _auth_field(
+                                                        'reg-username-input',
+                                                        'Username',
+                                                        'Choose a username',
+                                                        auto_complete='username',
+                                                        hint='Use at least 3 characters. Letters, numbers, hyphens, and underscores are allowed.'
+                                                    ),
+                                                ]
+                                            ),
+                                            _auth_section(
+                                                'Security',
+                                                [
+                                                    html.Div(
+                                                        className='form-row',
+                                                        children=[
+                                                            _auth_field(
+                                                                'reg-password-input',
+                                                                'Password',
+                                                                'Create a password',
+                                                                input_type='password',
+                                                                auto_complete='new-password',
+                                                                hint='Use a strong password for lab access.'
+                                                            ),
+                                                            _auth_field(
+                                                                'reg-confirm-input',
+                                                                'Confirm Password',
+                                                                'Confirm your password',
+                                                                input_type='password',
+                                                                auto_complete='new-password',
+                                                                hint='Must match the password above.'
+                                                            ),
+                                                        ]
+                                                    ),
+                                                ]
+                                            ),
+                                            html.Button(
+                                                id='register-btn',
+                                                className='btn btn-primary btn-full',
+                                                children='Create Account'
+                                            ),
+                                            html.Div(
+                                                className='auth-footer',
+                                                children=[
+                                                    html.Span(children='Already have an account? '),
+                                                    dcc.Link(
+                                                        href='/login',
+                                                        children='Sign in'
+                                                    ),
+                                                ]
                                             ),
                                         ]
-                                    ),
-                                ]
-                            ),
-                            
-                            html.Div(
-                                className='form-group',
-                                children=[
-                                    html.Label(
-                                        htmlFor='email-input',
-                                        children='Email'
-                                    ),
-                                    dcc.Input(
-                                        id='email-input',
-                                        type='email',
-                                        placeholder='your.email@example.com',
-                                        className='input-field',
-                                        autoComplete='email'
-                                    ),
-                                ]
-                            ),
-                            
-                            html.Button(
-                                id='register-btn',
-                                className='btn btn-primary btn-full',
-                                children='Create Account'
-                            ),
-                            
-                            html.Div(
-                                className='auth-footer',
-                                children=[
-                                    html.Span(children='Already have an account? '),
-                                    dcc.Link(
-                                        href='/login',
-                                        children='Sign in'
                                     ),
                                 ]
                             ),

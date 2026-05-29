@@ -46,6 +46,7 @@ def create_sidebar():
         {'id': 'dashboard',   'label': 'Dashboard',          'icon': 'fas fa-tachometer-alt', 'href': '/dashboard'},
         {'id': 'simulation',  'label': 'Simulation Control',  'icon': 'fas fa-play-circle',   'href': '/simulation'},
         {'id': 'scenarios',   'label': 'Scenarios',           'icon': 'fas fa-map-marked-alt','href': '/scenarios'},
+        {'id': 'live-traffic','label': 'Live Traffic',        'icon': 'fas fa-road',          'href': '/live-traffic'},
         {'id': 'performance', 'label': 'Performance',         'icon': 'fas fa-chart-line',    'href': '/performance'},
     ]
 

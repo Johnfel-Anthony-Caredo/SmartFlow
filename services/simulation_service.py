@@ -4,21 +4,21 @@ Holds a single SimulationEngine instance accessible from any Dash callback.
 """
 
 from typing import Optional
-from simulation.engine import SimulationEngine
+from simulation.sumo_engine import SumoSimulationEngine
 
-_engine: Optional[SimulationEngine] = None
+_engine: Optional[SumoSimulationEngine] = None
 
 
-def get_engine() -> SimulationEngine:
+def get_engine() -> SumoSimulationEngine:
     global _engine
     if _engine is None:
-        _engine = SimulationEngine(seed=42)
+        _engine = SumoSimulationEngine(seed=42)
     return _engine
 
 
 def reset_engine(seed: int = 42):
     global _engine
-    _engine = SimulationEngine(seed=seed)
+    _engine = SumoSimulationEngine(seed=seed)
 
 
 def start() -> str:

@@ -149,6 +149,7 @@ def layout():
                                             ),
                                         ]),
                                         html.Button(
+                                            id='apply-btn',
                                             className='apply-btn',
                                             children=[
                                                 html.I(className='fa-solid fa-check'),

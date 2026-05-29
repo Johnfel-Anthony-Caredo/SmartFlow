@@ -1,0 +1,2663 @@
+{
+  "version": 1,
+  "scope": {
+    "mode": "single_intersection",
+    "controlled_tls_ids": [
+      "7900968103",
+      "7900968104",
+      "7900968105",
+      "7900968106"
+    ]
+  },
+  "source_net": "inter_ped.net.xml",
+  "bounds": {
+    "min_x": 268.0,
+    "min_y": 610.0,
+    "max_x": 788.0,
+    "max_y": 1130.0
+  },
+  "roads": [
+    {
+      "edge_id": "-1337657045#0",
+      "function": "normal",
+      "from": "7900968103",
+      "to": "1217580006",
+      "shape": [
+        {
+          "x": 522.43,
+          "y": 873.17
+        },
+        {
+          "x": 463.59,
+          "y": 911.2
+        },
+        {
+          "x": 451.38,
+          "y": 918.89
+        },
+        {
+          "x": 428.91,
+          "y": 933.04
+        },
+        {
+          "x": 383.1,
+          "y": 961.15
+        },
+        {
+          "x": 365.85,
+          "y": 971.74
+        }
+      ],
+      "lanes": [
+        {
+          "id": "-1337657045#0_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 524.31,
+              "y": 880.77
+            },
+            {
+              "x": 467.57,
+              "y": 917.44
+            },
+            {
+              "x": 455.32,
+              "y": 925.15
+            },
+            {
+              "x": 432.82,
+              "y": 939.32
+            },
+            {
+              "x": 386.97,
+              "y": 967.46
+            },
+            {
+              "x": 369.72,
+              "y": 978.05
+            }
+          ]
+        },
+        {
+          "id": "-1337657045#0_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 522.9,
+              "y": 878.58
+            },
+            {
+              "x": 466.17,
+              "y": 915.25
+            },
+            {
+              "x": 453.94,
+              "y": 922.95
+            },
+            {
+              "x": 431.44,
+              "y": 937.12
+            },
+            {
+              "x": 385.61,
+              "y": 965.24
+            },
+            {
+              "x": 368.36,
+              "y": 975.83
+            }
+          ]
+        },
+        {
+          "id": "-1337657045#0_2",
+          "index": 2,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 521.16,
+              "y": 875.9
+            },
+            {
+              "x": 464.45,
+              "y": 912.55
+            },
+            {
+              "x": 452.23,
+              "y": 920.24
+            },
+            {
+              "x": 429.75,
+              "y": 934.4
+            },
+            {
+              "x": 383.94,
+              "y": 962.51
+            },
+            {
+              "x": 366.69,
+              "y": 973.1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "-1337657045#1",
+      "function": "normal",
+      "from": "352681772",
+      "to": "7900968103",
+      "shape": [
+        {
+          "x": 526.37,
+          "y": 879.43
+        },
+        {
+          "x": 526.2,
+          "y": 879.54
+        }
+      ],
+      "lanes": [
+        {
+          "id": "-1337657045#1_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 526.37,
+              "y": 879.43
+            },
+            {
+              "x": 526.2,
+              "y": 879.54
+            }
+          ]
+        },
+        {
+          "id": "-1337657045#1_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 524.96,
+              "y": 877.25
+            },
+            {
+              "x": 524.79,
+              "y": 877.36
+            }
+          ]
+        },
+        {
+          "id": "-1337657045#1_2",
+          "index": 2,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 523.22,
+              "y": 874.56
+            },
+            {
+              "x": 523.05,
+              "y": 874.67
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "-1337657045#2",
+      "function": "normal",
+      "from": "7900968104",
+      "to": "352681772",
+      "shape": [
+        {
+          "x": 537.21,
+          "y": 872.44
+        },
+        {
+          "x": 537.04,
+          "y": 872.55
+        }
+      ],
+      "lanes": [
+        {
+          "id": "-1337657045#2_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 537.21,
+              "y": 872.44
+            },
+            {
+              "x": 537.04,
+              "y": 872.55
+            }
+          ]
+        },
+        {
+          "id": "-1337657045#2_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 535.81,
+              "y": 870.25
+            },
+            {
+              "x": 535.64,
+              "y": 870.36
+            }
+          ]
+        },
+        {
+          "id": "-1337657045#2_2",
+          "index": 2,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 534.07,
+              "y": 867.56
+            },
+            {
+              "x": 533.91,
+              "y": 867.67
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "-1337657045#3",
+      "function": "normal",
+      "from": "7900968107",
+      "to": "7900968104",
+      "shape": [
+        {
+          "x": 788.0,
+          "y": 658.49
+        },
+        {
+          "x": 777.38,
+          "y": 667.6
+        },
+        {
+          "x": 764.49,
+          "y": 678.67
+        },
+        {
+          "x": 730.58,
+          "y": 707.57
+        },
+        {
+          "x": 723.15,
+          "y": 714.06
+        },
+        {
+          "x": 697.28,
+          "y": 736.63
+        },
+        {
+          "x": 667.47,
+          "y": 762.63
+        },
+        {
+          "x": 642.44,
+          "y": 784.48
+        },
+        {
+          "x": 611.68,
+          "y": 810.6
+        },
+        {
+          "x": 564.18,
+          "y": 846.19
+        },
+        {
+          "x": 532.86,
+          "y": 866.44
+        }
+      ],
+      "lanes": [
+        {
+          "id": "-1337657045#3_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 788.0,
+              "y": 668.24
+            },
+            {
+              "x": 782.2,
+              "y": 673.22
+            },
+            {
+              "x": 769.3,
+              "y": 684.29
+            },
+            {
+              "x": 735.41,
+              "y": 713.17
+            },
+            {
+              "x": 728.02,
+              "y": 719.64
+            },
+            {
+              "x": 702.14,
+              "y": 742.21
+            },
+            {
+              "x": 672.34,
+              "y": 768.21
+            },
+            {
+              "x": 647.27,
+              "y": 790.09
+            },
+            {
+              "x": 616.3,
+              "y": 816.39
+            },
+            {
+              "x": 568.41,
+              "y": 852.27
+            },
+            {
+              "x": 539.06,
+              "y": 871.25
+            }
+          ]
+        },
+        {
+          "id": "-1337657045#3_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 788.0,
+              "y": 664.81
+            },
+            {
+              "x": 780.51,
+              "y": 671.24
+            },
+            {
+              "x": 767.61,
+              "y": 682.32
+            },
+            {
+              "x": 733.72,
+              "y": 711.2
+            },
+            {
+              "x": 726.31,
+              "y": 717.68
+            },
+            {
+              "x": 700.44,
+              "y": 740.25
+            },
+            {
+              "x": 670.63,
+              "y": 766.25
+            },
+            {
+              "x": 645.57,
+              "y": 788.12
+            },
+            {
+              "x": 614.68,
+              "y": 814.35
+            },
+            {
+              "x": 566.93,
+              "y": 850.13
+            },
+            {
+              "x": 537.65,
+              "y": 869.06
+            }
+          ]
+        },
+        {
+          "id": "-1337657045#3_2",
+          "index": 2,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 788.0,
+              "y": 660.59
+            },
+            {
+              "x": 778.42,
+              "y": 668.81
+            },
+            {
+              "x": 765.53,
+              "y": 679.89
+            },
+            {
+              "x": 731.63,
+              "y": 708.78
+            },
+            {
+              "x": 724.2,
+              "y": 715.27
+            },
+            {
+              "x": 698.33,
+              "y": 737.84
+            },
+            {
+              "x": 668.52,
+              "y": 763.84
+            },
+            {
+              "x": 643.48,
+              "y": 785.69
+            },
+            {
+              "x": 612.68,
+              "y": 811.85
+            },
+            {
+              "x": 565.1,
+              "y": 847.5
+            },
+            {
+              "x": 535.91,
+              "y": 866.37
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "-180969633#0",
+      "function": "normal",
+      "from": "7900968105",
+      "to": "1217579782",
+      "shape": [
+        {
+          "x": 532.27,
+          "y": 875.34
+        },
+        {
+          "x": 645.18,
+          "y": 1017.33
+        },
+        {
+          "x": 651.27,
+          "y": 1024.98
+        },
+        {
+          "x": 693.71,
+          "y": 1077.06
+        },
+        {
+          "x": 713.26,
+          "y": 1101.52
+        },
+        {
+          "x": 736.03,
+          "y": 1130.0
+        }
+      ],
+      "lanes": [
+        {
+          "id": "-180969633#0_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 537.44,
+              "y": 875.09
+            },
+            {
+              "x": 648.47,
+              "y": 1014.72
+            },
+            {
+              "x": 654.54,
+              "y": 1022.35
+            },
+            {
+              "x": 696.98,
+              "y": 1074.42
+            },
+            {
+              "x": 716.54,
+              "y": 1098.9
+            },
+            {
+              "x": 741.4,
+              "y": 1130.0
+            }
+          ]
+        },
+        {
+          "id": "-180969633#0_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 535.4,
+              "y": 876.71
+            },
+            {
+              "x": 646.43,
+              "y": 1016.33
+            },
+            {
+              "x": 652.52,
+              "y": 1023.98
+            },
+            {
+              "x": 694.96,
+              "y": 1076.06
+            },
+            {
+              "x": 714.51,
+              "y": 1100.52
+            },
+            {
+              "x": 738.08,
+              "y": 1130.0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "-180969633#1",
+      "function": "normal",
+      "from": "352681772",
+      "to": "7900968105",
+      "shape": [
+        {
+          "x": 536.36,
+          "y": 873.75
+        },
+        {
+          "x": 536.49,
+          "y": 873.9
+        }
+      ],
+      "lanes": [
+        {
+          "id": "-180969633#1_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 536.36,
+              "y": 873.75
+            },
+            {
+              "x": 536.49,
+              "y": 873.9
+            }
+          ]
+        },
+        {
+          "id": "-180969633#1_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 534.32,
+              "y": 875.36
+            },
+            {
+              "x": 534.45,
+              "y": 875.51
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "-180970197#0",
+      "function": "normal",
+      "from": "7900968106",
+      "to": "352681772",
+      "shape": [
+        {
+          "x": 525.57,
+          "y": 860.42
+        },
+        {
+          "x": 525.69,
+          "y": 860.58
+        }
+      ],
+      "lanes": [
+        {
+          "id": "-180970197#0_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 525.57,
+              "y": 860.42
+            },
+            {
+              "x": 525.69,
+              "y": 860.58
+            }
+          ]
+        },
+        {
+          "id": "-180970197#0_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 523.57,
+              "y": 862.08
+            },
+            {
+              "x": 523.7,
+              "y": 862.24
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "-180970197#1",
+      "function": "normal",
+      "from": "376306056",
+      "to": "7900968106",
+      "shape": [
+        {
+          "x": 268.0,
+          "y": 763.94
+        },
+        {
+          "x": 270.99,
+          "y": 765.35
+        },
+        {
+          "x": 276.59,
+          "y": 769.3
+        },
+        {
+          "x": 303.26,
+          "y": 790.65
+        },
+        {
+          "x": 307.98,
+          "y": 793.55
+        },
+        {
+          "x": 313.53,
+          "y": 795.94
+        },
+        {
+          "x": 319.81,
+          "y": 797.83
+        },
+        {
+          "x": 471.08,
+          "y": 833.16
+        },
+        {
+          "x": 482.63,
+          "y": 836.54
+        },
+        {
+          "x": 493.48,
+          "y": 841.02
+        },
+        {
+          "x": 501.02,
+          "y": 844.83
+        },
+        {
+          "x": 508.32,
+          "y": 849.28
+        },
+        {
+          "x": 514.59,
+          "y": 854.26
+        },
+        {
+          "x": 519.3,
+          "y": 859.29
+        },
+        {
+          "x": 523.57,
+          "y": 864.59
+        }
+      ],
+      "lanes": [
+        {
+          "id": "-180970197#1_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 268.0,
+              "y": 759.29
+            },
+            {
+              "x": 273.11,
+              "y": 761.71
+            },
+            {
+              "x": 279.12,
+              "y": 765.94
+            },
+            {
+              "x": 305.68,
+              "y": 787.21
+            },
+            {
+              "x": 309.92,
+              "y": 789.81
+            },
+            {
+              "x": 314.97,
+              "y": 791.99
+            },
+            {
+              "x": 320.89,
+              "y": 793.77
+            },
+            {
+              "x": 472.15,
+              "y": 829.1
+            },
+            {
+              "x": 484.03,
+              "y": 832.57
+            },
+            {
+              "x": 495.23,
+              "y": 837.2
+            },
+            {
+              "x": 503.06,
+              "y": 841.16
+            },
+            {
+              "x": 510.73,
+              "y": 845.83
+            },
+            {
+              "x": 517.44,
+              "y": 851.16
+            },
+            {
+              "x": 522.47,
+              "y": 856.53
+            },
+            {
+              "x": 524.84,
+              "y": 859.47
+            }
+          ]
+        },
+        {
+          "id": "-180970197#1_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 268.0,
+              "y": 762.16
+            },
+            {
+              "x": 271.8,
+              "y": 763.96
+            },
+            {
+              "x": 277.55,
+              "y": 768.02
+            },
+            {
+              "x": 304.18,
+              "y": 789.34
+            },
+            {
+              "x": 308.72,
+              "y": 792.13
+            },
+            {
+              "x": 314.08,
+              "y": 794.43
+            },
+            {
+              "x": 320.22,
+              "y": 796.28
+            },
+            {
+              "x": 471.49,
+              "y": 831.61
+            },
+            {
+              "x": 483.16,
+              "y": 835.03
+            },
+            {
+              "x": 494.15,
+              "y": 839.56
+            },
+            {
+              "x": 501.8,
+              "y": 843.43
+            },
+            {
+              "x": 509.24,
+              "y": 847.97
+            },
+            {
+              "x": 515.68,
+              "y": 853.08
+            },
+            {
+              "x": 520.51,
+              "y": 858.24
+            },
+            {
+              "x": 522.81,
+              "y": 861.1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "1337657045#0",
+      "function": "normal",
+      "from": "1217580006",
+      "to": "7900968103",
+      "shape": [
+        {
+          "x": 365.85,
+          "y": 971.74
+        },
+        {
+          "x": 383.1,
+          "y": 961.15
+        },
+        {
+          "x": 428.91,
+          "y": 933.04
+        },
+        {
+          "x": 451.38,
+          "y": 918.89
+        },
+        {
+          "x": 463.59,
+          "y": 911.2
+        },
+        {
+          "x": 522.43,
+          "y": 873.17
+        }
+      ],
+      "lanes": [
+        {
+          "id": "1337657045#0_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 361.98,
+              "y": 965.43
+            },
+            {
+              "x": 379.23,
+              "y": 954.84
+            },
+            {
+              "x": 425.0,
+              "y": 926.76
+            },
+            {
+              "x": 447.44,
+              "y": 912.63
+            },
+            {
+              "x": 459.61,
+              "y": 904.96
+            },
+            {
+              "x": 516.27,
+              "y": 868.34
+            }
+          ]
+        },
+        {
+          "id": "1337657045#0_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 363.34,
+              "y": 967.65
+            },
+            {
+              "x": 380.59,
+              "y": 957.06
+            },
+            {
+              "x": 426.38,
+              "y": 928.96
+            },
+            {
+              "x": 448.82,
+              "y": 914.83
+            },
+            {
+              "x": 461.01,
+              "y": 907.15
+            },
+            {
+              "x": 517.69,
+              "y": 870.52
+            }
+          ]
+        },
+        {
+          "id": "1337657045#0_2",
+          "index": 2,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 365.01,
+              "y": 970.38
+            },
+            {
+              "x": 382.26,
+              "y": 959.79
+            },
+            {
+              "x": 428.07,
+              "y": 931.68
+            },
+            {
+              "x": 450.53,
+              "y": 917.54
+            },
+            {
+              "x": 462.73,
+              "y": 909.85
+            },
+            {
+              "x": 519.42,
+              "y": 873.21
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "1337657045#1",
+      "function": "normal",
+      "from": "7900968103",
+      "to": "352681772",
+      "shape": [
+        {
+          "x": 518.17,
+          "y": 867.12
+        },
+        {
+          "x": 518.33,
+          "y": 867.01
+        }
+      ],
+      "lanes": [
+        {
+          "id": "1337657045#1_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 518.17,
+              "y": 867.12
+            },
+            {
+              "x": 518.33,
+              "y": 867.01
+            }
+          ]
+        },
+        {
+          "id": "1337657045#1_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 519.58,
+              "y": 869.3
+            },
+            {
+              "x": 519.75,
+              "y": 869.19
+            }
+          ]
+        },
+        {
+          "id": "1337657045#1_2",
+          "index": 2,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 521.32,
+              "y": 871.99
+            },
+            {
+              "x": 521.48,
+              "y": 871.88
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "1337657045#2",
+      "function": "normal",
+      "from": "352681772",
+      "to": "7900968104",
+      "shape": [
+        {
+          "x": 529.03,
+          "y": 860.1
+        },
+        {
+          "x": 529.2,
+          "y": 859.99
+        }
+      ],
+      "lanes": [
+        {
+          "id": "1337657045#2_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 529.03,
+              "y": 860.1
+            },
+            {
+              "x": 529.2,
+              "y": 859.99
+            }
+          ]
+        },
+        {
+          "id": "1337657045#2_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 530.44,
+              "y": 862.29
+            },
+            {
+              "x": 530.61,
+              "y": 862.18
+            }
+          ]
+        },
+        {
+          "id": "1337657045#2_2",
+          "index": 2,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 532.17,
+              "y": 864.98
+            },
+            {
+              "x": 532.34,
+              "y": 864.87
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "1337657045#3",
+      "function": "normal",
+      "from": "7900968104",
+      "to": "7900968107",
+      "shape": [
+        {
+          "x": 532.86,
+          "y": 866.44
+        },
+        {
+          "x": 564.18,
+          "y": 846.19
+        },
+        {
+          "x": 611.68,
+          "y": 810.6
+        },
+        {
+          "x": 642.44,
+          "y": 784.48
+        },
+        {
+          "x": 667.47,
+          "y": 762.63
+        },
+        {
+          "x": 697.28,
+          "y": 736.63
+        },
+        {
+          "x": 723.15,
+          "y": 714.06
+        },
+        {
+          "x": 730.58,
+          "y": 707.57
+        },
+        {
+          "x": 764.49,
+          "y": 678.67
+        },
+        {
+          "x": 777.38,
+          "y": 667.6
+        },
+        {
+          "x": 788.0,
+          "y": 658.49
+        }
+      ],
+      "lanes": [
+        {
+          "id": "1337657045#3_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 531.02,
+              "y": 858.82
+            },
+            {
+              "x": 559.95,
+              "y": 840.11
+            },
+            {
+              "x": 607.06,
+              "y": 804.81
+            },
+            {
+              "x": 637.61,
+              "y": 778.87
+            },
+            {
+              "x": 662.6,
+              "y": 757.05
+            },
+            {
+              "x": 692.42,
+              "y": 731.05
+            },
+            {
+              "x": 718.28,
+              "y": 708.48
+            },
+            {
+              "x": 725.75,
+              "y": 701.97
+            },
+            {
+              "x": 759.68,
+              "y": 673.04
+            },
+            {
+              "x": 772.56,
+              "y": 661.98
+            },
+            {
+              "x": 788.0,
+              "y": 648.73
+            }
+          ]
+        },
+        {
+          "id": "1337657045#3_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 532.43,
+              "y": 861.0
+            },
+            {
+              "x": 561.43,
+              "y": 842.25
+            },
+            {
+              "x": 608.68,
+              "y": 806.85
+            },
+            {
+              "x": 639.31,
+              "y": 780.84
+            },
+            {
+              "x": 664.31,
+              "y": 759.01
+            },
+            {
+              "x": 694.12,
+              "y": 733.01
+            },
+            {
+              "x": 719.99,
+              "y": 710.44
+            },
+            {
+              "x": 727.44,
+              "y": 703.94
+            },
+            {
+              "x": 761.37,
+              "y": 675.02
+            },
+            {
+              "x": 774.25,
+              "y": 663.96
+            },
+            {
+              "x": 788.0,
+              "y": 652.16
+            }
+          ]
+        },
+        {
+          "id": "1337657045#3_2",
+          "index": 2,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian bicycle tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 534.17,
+              "y": 863.69
+            },
+            {
+              "x": 563.26,
+              "y": 844.88
+            },
+            {
+              "x": 610.68,
+              "y": 809.35
+            },
+            {
+              "x": 641.4,
+              "y": 783.27
+            },
+            {
+              "x": 666.42,
+              "y": 761.42
+            },
+            {
+              "x": 696.23,
+              "y": 735.42
+            },
+            {
+              "x": 722.1,
+              "y": 712.85
+            },
+            {
+              "x": 729.53,
+              "y": 706.36
+            },
+            {
+              "x": 763.45,
+              "y": 677.45
+            },
+            {
+              "x": 776.34,
+              "y": 666.39
+            },
+            {
+              "x": 788.0,
+              "y": 656.39
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "180969633#0",
+      "function": "normal",
+      "from": "1217579782",
+      "to": "7900968105",
+      "shape": [
+        {
+          "x": 736.03,
+          "y": 1130.0
+        },
+        {
+          "x": 713.26,
+          "y": 1101.52
+        },
+        {
+          "x": 693.71,
+          "y": 1077.06
+        },
+        {
+          "x": 651.27,
+          "y": 1024.98
+        },
+        {
+          "x": 645.18,
+          "y": 1017.33
+        },
+        {
+          "x": 532.27,
+          "y": 875.34
+        }
+      ],
+      "lanes": [
+        {
+          "id": "180969633#0_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 730.65,
+              "y": 1130.0
+            },
+            {
+              "x": 709.98,
+              "y": 1104.14
+            },
+            {
+              "x": 690.44,
+              "y": 1079.7
+            },
+            {
+              "x": 648.0,
+              "y": 1027.61
+            },
+            {
+              "x": 641.89,
+              "y": 1019.94
+            },
+            {
+              "x": 530.86,
+              "y": 880.32
+            }
+          ]
+        },
+        {
+          "id": "180969633#0_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 733.98,
+              "y": 1130.0
+            },
+            {
+              "x": 712.01,
+              "y": 1102.52
+            },
+            {
+              "x": 692.46,
+              "y": 1078.06
+            },
+            {
+              "x": 650.02,
+              "y": 1025.98
+            },
+            {
+              "x": 643.93,
+              "y": 1018.33
+            },
+            {
+              "x": 532.9,
+              "y": 878.7
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "180969633#1",
+      "function": "normal",
+      "from": "7900968105",
+      "to": "352681772",
+      "shape": [
+        {
+          "x": 529.89,
+          "y": 879.11
+        },
+        {
+          "x": 529.77,
+          "y": 878.95
+        }
+      ],
+      "lanes": [
+        {
+          "id": "180969633#1_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 529.89,
+              "y": 879.11
+            },
+            {
+              "x": 529.77,
+              "y": 878.95
+            }
+          ]
+        },
+        {
+          "id": "180969633#1_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 531.93,
+              "y": 877.5
+            },
+            {
+              "x": 531.81,
+              "y": 877.34
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "180970197#0",
+      "function": "normal",
+      "from": "352681772",
+      "to": "7900968106",
+      "shape": [
+        {
+          "x": 519.24,
+          "y": 865.95
+        },
+        {
+          "x": 519.11,
+          "y": 865.79
+        }
+      ],
+      "lanes": [
+        {
+          "id": "180970197#0_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 519.24,
+              "y": 865.95
+            },
+            {
+              "x": 519.11,
+              "y": 865.79
+            }
+          ]
+        },
+        {
+          "id": "180970197#0_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 521.23,
+              "y": 864.28
+            },
+            {
+              "x": 521.11,
+              "y": 864.13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": "180970197#1",
+      "function": "normal",
+      "from": "7900968106",
+      "to": "376306056",
+      "shape": [
+        {
+          "x": 523.57,
+          "y": 864.59
+        },
+        {
+          "x": 519.3,
+          "y": 859.29
+        },
+        {
+          "x": 514.59,
+          "y": 854.26
+        },
+        {
+          "x": 508.32,
+          "y": 849.28
+        },
+        {
+          "x": 501.02,
+          "y": 844.83
+        },
+        {
+          "x": 493.48,
+          "y": 841.02
+        },
+        {
+          "x": 482.63,
+          "y": 836.54
+        },
+        {
+          "x": 471.08,
+          "y": 833.16
+        },
+        {
+          "x": 319.81,
+          "y": 797.83
+        },
+        {
+          "x": 313.53,
+          "y": 795.94
+        },
+        {
+          "x": 307.98,
+          "y": 793.55
+        },
+        {
+          "x": 303.26,
+          "y": 790.65
+        },
+        {
+          "x": 276.59,
+          "y": 769.3
+        },
+        {
+          "x": 270.99,
+          "y": 765.35
+        },
+        {
+          "x": 268.0,
+          "y": 763.94
+        }
+      ],
+      "lanes": [
+        {
+          "id": "180970197#1_0",
+          "index": 0,
+          "width": 2.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 518.3,
+              "y": 864.74
+            },
+            {
+              "x": 516.13,
+              "y": 862.05
+            },
+            {
+              "x": 511.74,
+              "y": 857.36
+            },
+            {
+              "x": 505.91,
+              "y": 852.73
+            },
+            {
+              "x": 498.98,
+              "y": 848.5
+            },
+            {
+              "x": 491.73,
+              "y": 844.84
+            },
+            {
+              "x": 481.23,
+              "y": 840.51
+            },
+            {
+              "x": 470.01,
+              "y": 837.22
+            },
+            {
+              "x": 318.73,
+              "y": 801.89
+            },
+            {
+              "x": 312.09,
+              "y": 799.89
+            },
+            {
+              "x": 306.04,
+              "y": 797.29
+            },
+            {
+              "x": 300.84,
+              "y": 794.09
+            },
+            {
+              "x": 274.06,
+              "y": 772.66
+            },
+            {
+              "x": 268.87,
+              "y": 768.99
+            },
+            {
+              "x": 268.0,
+              "y": 768.58
+            }
+          ]
+        },
+        {
+          "id": "180970197#1_1",
+          "index": 1,
+          "width": 3.2,
+          "allow": "",
+          "disallow": "pedestrian tram rail_urban rail rail_electric rail_fast ship container cable_car subway aircraft wheelchair scooter drone",
+          "shape": [
+            {
+              "x": 520.32,
+              "y": 863.11
+            },
+            {
+              "x": 518.09,
+              "y": 860.34
+            },
+            {
+              "x": 513.5,
+              "y": 855.44
+            },
+            {
+              "x": 507.4,
+              "y": 850.59
+            },
+            {
+              "x": 500.24,
+              "y": 846.23
+            },
+            {
+              "x": 492.81,
+              "y": 842.48
+            },
+            {
+              "x": 482.1,
+              "y": 838.05
+            },
+            {
+              "x": 470.67,
+              "y": 834.71
+            },
+            {
+              "x": 319.4,
+              "y": 799.38
+            },
+            {
+              "x": 312.98,
+              "y": 797.45
+            },
+            {
+              "x": 307.24,
+              "y": 794.97
+            },
+            {
+              "x": 302.34,
+              "y": 791.96
+            },
+            {
+              "x": 275.63,
+              "y": 770.58
+            },
+            {
+              "x": 270.18,
+              "y": 766.74
+            },
+            {
+              "x": 268.0,
+              "y": 765.71
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "crossings": [
+    {
+      "edge_id": ":352681772_c0",
+      "function": "crossing",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 534.34,
+          "y": 872.8
+        },
+        {
+          "x": 529.31,
+          "y": 876.76
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":352681772_c0_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 534.34,
+              "y": 872.8
+            },
+            {
+              "x": 529.31,
+              "y": 876.76
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":352681772_c1",
+      "function": "crossing",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 527.89,
+          "y": 862.03
+        },
+        {
+          "x": 534.82,
+          "y": 872.79
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":352681772_c1_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 527.89,
+              "y": 862.03
+            },
+            {
+              "x": 534.82,
+              "y": 872.79
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":352681772_c2",
+      "function": "crossing",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 521.28,
+          "y": 866.84
+        },
+        {
+          "x": 526.2,
+          "y": 862.75
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":352681772_c2_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 521.28,
+              "y": 866.84
+            },
+            {
+              "x": 526.2,
+              "y": 862.75
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":352681772_c3",
+      "function": "crossing",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 527.51,
+          "y": 877.51
+        },
+        {
+          "x": 520.56,
+          "y": 866.76
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":352681772_c3_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 527.51,
+              "y": 877.51
+            },
+            {
+              "x": 520.56,
+              "y": 866.76
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968103_c0",
+      "function": "crossing",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 517.03,
+          "y": 869.04
+        },
+        {
+          "x": 523.98,
+          "y": 879.79
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968103_c0_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 517.03,
+              "y": 869.04
+            },
+            {
+              "x": 523.98,
+              "y": 879.79
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968104_c0",
+      "function": "crossing",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 529.88,
+          "y": 860.74
+        },
+        {
+          "x": 536.83,
+          "y": 871.49
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968104_c0_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 529.88,
+              "y": 860.74
+            },
+            {
+              "x": 536.83,
+              "y": 871.49
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968105_c0",
+      "function": "crossing",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 535.41,
+          "y": 874.15
+        },
+        {
+          "x": 530.4,
+          "y": 878.13
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968105_c0_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 535.41,
+              "y": 874.15
+            },
+            {
+              "x": 530.4,
+              "y": 878.13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968106_c0",
+      "function": "crossing",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 523.52,
+          "y": 859.52
+        },
+        {
+          "x": 518.6,
+          "y": 863.61
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968106_c0_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 523.52,
+              "y": 859.52
+            },
+            {
+              "x": 518.6,
+              "y": 863.61
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "walking_areas": [
+    {
+      "edge_id": ":7900968103_w0",
+      "function": "walkingarea",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 523.76,
+          "y": 879.93
+        },
+        {
+          "x": 524.85,
+          "y": 881.61
+        },
+        {
+          "x": 526.75,
+          "y": 880.38
+        },
+        {
+          "x": 525.66,
+          "y": 878.7
+        },
+        {
+          "x": 522.3,
+          "y": 880.88
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968103_w0_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 523.76,
+              "y": 879.93
+            },
+            {
+              "x": 524.85,
+              "y": 881.61
+            },
+            {
+              "x": 526.75,
+              "y": 880.38
+            },
+            {
+              "x": 525.66,
+              "y": 878.7
+            },
+            {
+              "x": 522.3,
+              "y": 880.88
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968103_w1",
+      "function": "walkingarea",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 515.35,
+          "y": 870.13
+        },
+        {
+          "x": 518.71,
+          "y": 867.96
+        },
+        {
+          "x": 517.62,
+          "y": 866.28
+        },
+        {
+          "x": 515.73,
+          "y": 867.5
+        },
+        {
+          "x": 516.82,
+          "y": 869.18
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968103_w1_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 515.35,
+              "y": 870.13
+            },
+            {
+              "x": 518.71,
+              "y": 867.96
+            },
+            {
+              "x": 517.62,
+              "y": 866.28
+            },
+            {
+              "x": 515.73,
+              "y": 867.5
+            },
+            {
+              "x": 516.82,
+              "y": 869.18
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968104_w0",
+      "function": "walkingarea",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 536.67,
+          "y": 871.6
+        },
+        {
+          "x": 537.75,
+          "y": 873.28
+        },
+        {
+          "x": 539.6,
+          "y": 872.08
+        },
+        {
+          "x": 538.51,
+          "y": 870.41
+        },
+        {
+          "x": 535.16,
+          "y": 872.58
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968104_w0_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 536.67,
+              "y": 871.6
+            },
+            {
+              "x": 537.75,
+              "y": 873.28
+            },
+            {
+              "x": 539.6,
+              "y": 872.08
+            },
+            {
+              "x": 538.51,
+              "y": 870.41
+            },
+            {
+              "x": 535.16,
+              "y": 872.58
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968104_w1",
+      "function": "walkingarea",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 528.21,
+          "y": 861.83
+        },
+        {
+          "x": 531.56,
+          "y": 859.66
+        },
+        {
+          "x": 530.48,
+          "y": 857.98
+        },
+        {
+          "x": 528.66,
+          "y": 859.15
+        },
+        {
+          "x": 529.74,
+          "y": 860.83
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968104_w1_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 528.21,
+              "y": 861.83
+            },
+            {
+              "x": 531.56,
+              "y": 859.66
+            },
+            {
+              "x": 530.48,
+              "y": 857.98
+            },
+            {
+              "x": 528.66,
+              "y": 859.15
+            },
+            {
+              "x": 529.74,
+              "y": 860.83
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968105_w0",
+      "function": "walkingarea",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 530.68,
+          "y": 878.49
+        },
+        {
+          "x": 529.11,
+          "y": 879.73
+        },
+        {
+          "x": 530.08,
+          "y": 880.94
+        },
+        {
+          "x": 531.65,
+          "y": 879.7
+        },
+        {
+          "x": 529.16,
+          "y": 876.57
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968105_w0_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 530.68,
+              "y": 878.49
+            },
+            {
+              "x": 529.11,
+              "y": 879.73
+            },
+            {
+              "x": 530.08,
+              "y": 880.94
+            },
+            {
+              "x": 531.65,
+              "y": 879.7
+            },
+            {
+              "x": 529.16,
+              "y": 876.57
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968105_w1",
+      "function": "walkingarea",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 534.17,
+          "y": 872.58
+        },
+        {
+          "x": 536.66,
+          "y": 875.71
+        },
+        {
+          "x": 538.22,
+          "y": 874.47
+        },
+        {
+          "x": 537.27,
+          "y": 873.28
+        },
+        {
+          "x": 535.7,
+          "y": 874.52
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968105_w1_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 534.17,
+              "y": 872.58
+            },
+            {
+              "x": 536.66,
+              "y": 875.71
+            },
+            {
+              "x": 538.22,
+              "y": 874.47
+            },
+            {
+              "x": 537.27,
+              "y": 873.28
+            },
+            {
+              "x": 535.7,
+              "y": 874.52
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968106_w0",
+      "function": "walkingarea",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 519.07,
+          "y": 864.11
+        },
+        {
+          "x": 517.52,
+          "y": 865.37
+        },
+        {
+          "x": 518.34,
+          "y": 866.43
+        },
+        {
+          "x": 519.88,
+          "y": 865.15
+        },
+        {
+          "x": 517.32,
+          "y": 862.08
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968106_w0_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 519.07,
+              "y": 864.11
+            },
+            {
+              "x": 517.52,
+              "y": 865.37
+            },
+            {
+              "x": 518.34,
+              "y": 866.43
+            },
+            {
+              "x": 519.88,
+              "y": 865.15
+            },
+            {
+              "x": 517.32,
+              "y": 862.08
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "edge_id": ":7900968106_w1",
+      "function": "walkingarea",
+      "from": "",
+      "to": "",
+      "shape": [
+        {
+          "x": 522.24,
+          "y": 857.99
+        },
+        {
+          "x": 524.8,
+          "y": 861.06
+        },
+        {
+          "x": 526.34,
+          "y": 859.78
+        },
+        {
+          "x": 525.62,
+          "y": 858.84
+        },
+        {
+          "x": 524.06,
+          "y": 860.1
+        }
+      ],
+      "lanes": [
+        {
+          "id": ":7900968106_w1_0",
+          "index": 0,
+          "width": 4.0,
+          "allow": "pedestrian",
+          "disallow": "",
+          "shape": [
+            {
+              "x": 522.24,
+              "y": 857.99
+            },
+            {
+              "x": 524.8,
+              "y": 861.06
+            },
+            {
+              "x": 526.34,
+              "y": 859.78
+            },
+            {
+              "x": 525.62,
+              "y": 858.84
+            },
+            {
+              "x": 524.06,
+              "y": 860.1
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "id": "7900968103",
+      "x": 522.43,
+      "y": 873.17,
+      "shape": [
+        {
+          "x": 528.21,
+          "y": 879.43
+        },
+        {
+          "x": 519.09,
+          "y": 865.33
+        },
+        {
+          "x": 515.73,
+          "y": 867.5
+        },
+        {
+          "x": 524.85,
+          "y": 881.61
+        }
+      ]
+    },
+    {
+      "id": "7900968104",
+      "x": 532.86,
+      "y": 866.44,
+      "shape": [
+        {
+          "x": 539.6,
+          "y": 872.08
+        },
+        {
+          "x": 530.48,
+          "y": 857.98
+        },
+        {
+          "x": 527.13,
+          "y": 860.14
+        },
+        {
+          "x": 536.22,
+          "y": 874.26
+        }
+      ]
+    },
+    {
+      "id": "7900968105",
+      "x": 532.27,
+      "y": 875.34,
+      "shape": [
+        {
+          "x": 530.08,
+          "y": 880.94
+        },
+        {
+          "x": 538.22,
+          "y": 874.47
+        },
+        {
+          "x": 535.75,
+          "y": 871.35
+        },
+        {
+          "x": 527.58,
+          "y": 877.8
+        }
+      ]
+    },
+    {
+      "id": "7900968106",
+      "x": 523.57,
+      "y": 864.59,
+      "shape": [
+        {
+          "x": 520.08,
+          "y": 868.53
+        },
+        {
+          "x": 528.08,
+          "y": 861.88
+        },
+        {
+          "x": 525.62,
+          "y": 858.84
+        },
+        {
+          "x": 517.52,
+          "y": 865.37
+        }
+      ]
+    }
+  ]
+}
