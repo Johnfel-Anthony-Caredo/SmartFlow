@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS scenarios (
     traffic_density TEXT DEFAULT 'Medium',
     pedestrian_density TEXT DEFAULT 'Medium',
     emergency_mode TEXT DEFAULT 'Disabled',
+    road_constraint TEXT DEFAULT 'None',
     lane_closure_config TEXT DEFAULT '{}',
     construction_config TEXT DEFAULT '{}',
     accident_config TEXT DEFAULT '{}',
@@ -292,29 +293,29 @@ def seed_data():
             scenarios = [
                 ('Tagum City — Main Intersection',
                  'Primary high-volume intersection: Pioneer Ave & Apokon Rd',
-                 'High', 'Medium', 'Disabled',
+                 'High', 'Medium', 'Disabled', 'None',
                  '{}', '{}', '{}', '{}', None, 1, 0),
                 ('Tagum City — Secondary Route',
                  'Secondary route with moderate traffic volume',
-                 'Medium', 'Low', 'Disabled',
+                 'Medium', 'Low', 'Disabled', 'None',
                  '{}', '{}', '{}', '{}', None, 1, 0),
                 ('Emergency Vehicle Scenario',
                  'High traffic with active emergency vehicle priority',
-                 'Very High', 'Medium', 'Enabled (1 Ambulance)',
+                 'Very High', 'Medium', 'Enabled (1 Ambulance)', 'None',
                  '{}', '{}', '{}', '{}', None, 1, 0),
                 ('Lane Closure — Construction',
                  'Moderate traffic with lane closure due to road construction',
-                 'Medium', 'Low', 'Disabled',
+                 'Medium', 'Low', 'Disabled', 'None',
                  '{"enabled": true, "approach": "north", "lanes_closed": 1}',
                  '{"enabled": true, "approach": "north", "speed_reduction": 0.5}',
                  '{}', '{}', None, 1, 0),
             ]
             conn.executemany(
                 """INSERT INTO scenarios (name, description, traffic_density,
-                   pedestrian_density, emergency_mode,
+                   pedestrian_density, emergency_mode, road_constraint,
                    lane_closure_config, construction_config, accident_config,
                    flooding_config, created_by, is_official, is_archived)
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
                 scenarios
             )
 
@@ -543,6 +544,7 @@ def count_active_admins():
 
 def create_scenario(name, description='', traffic_density='Medium',
                     pedestrian_density='Medium', emergency_mode='Disabled',
+                    road_constraint='None',
                     lane_closure_config='{}',
                     construction_config='{}', accident_config='{}',
                     flooding_config='{}', created_by=None,
@@ -561,12 +563,12 @@ def create_scenario(name, description='', traffic_density='Medium',
     with get_db() as conn:
         cursor = conn.execute(
             """INSERT INTO scenarios (name, description, traffic_density,
-               pedestrian_density, emergency_mode,
+               pedestrian_density, emergency_mode, road_constraint,
                lane_closure_config, construction_config, accident_config,
                flooding_config, created_by, is_official, is_archived)
-               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""",
             (name, description, traffic_density, pedestrian_density,
-             emergency_mode, lane_closure_config,
+             emergency_mode, road_constraint, lane_closure_config,
              construction_config, accident_config, flooding_config,
              created_by, is_official, is_archived)
         )

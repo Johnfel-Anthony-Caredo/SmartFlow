@@ -541,6 +541,27 @@ def create_control_panel() -> html.Div:
                     className='dash-dropdown dropdown-small setting-dropdown',
                 ),
             ]),
+            # Road Constraint
+            html.Div(className='setting-group', children=[
+                html.Label('Road Constraint', className='setting-label'),
+                dcc.Dropdown(
+                    id='road-constraint-dropdown',
+                    options=[
+                        {'label': 'None', 'value': 'None'},
+                        {'label': 'Weight Limit', 'value': 'Weight Limit'},
+                        {'label': 'Height Restriction', 'value': 'Height Restriction'},
+                        {'label': 'One-Way', 'value': 'One-Way'},
+                        {'label': 'Narrow Road', 'value': 'Narrow Road'},
+                        {'label': 'School Zone', 'value': 'School Zone'},
+                        {'label': 'No Overtaking', 'value': 'No Overtaking'},
+                        {'label': 'Speed Bump', 'value': 'Speed Bump'},
+                    ],
+                    value='None',
+                    clearable=False,
+                    searchable=False,
+                    className='dash-dropdown dropdown-small setting-dropdown',
+                ),
+            ]),
             # Apply button
             html.Button(
                 id='btn-apply-scenario',

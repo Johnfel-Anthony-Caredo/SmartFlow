@@ -110,6 +110,24 @@
     font-family: inherit;
 }
 
+.input-field:-webkit-autofill,
+.input-field:-webkit-autofill:hover,
+.input-field:-webkit-autofill:focus,
+.input-field:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--text-primary) !important;
+    -webkit-box-shadow: 0 0 0 1000px var(--bg-input) inset !important;
+    box-shadow: 0 0 0 1000px var(--bg-input) inset !important;
+    caret-color: var(--text-primary) !important;
+    border-color: var(--border-default) !important;
+    transition: background-color 9999s ease-in-out 0s !important;
+}
+
+.input-field:autofill {
+    background-color: var(--bg-input) !important;
+    color: var(--text-primary) !important;
+    caret-color: var(--text-primary) !important;
+}
+
 .input-field:focus {
     outline: none;
     border-color: var(--accent);

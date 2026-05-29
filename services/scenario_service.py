@@ -28,5 +28,6 @@ def summary(scenario_id: int) -> Optional[dict]:
         "traffic_density": row.get("traffic_density"),
         "pedestrian_density": row.get("pedestrian_density"),
         "emergency_mode": row.get("emergency_mode"),
+        "road_constraint": row.get("road_constraint"),
         "control_mode": row.get("control_mode", "fixed-time"),
     }

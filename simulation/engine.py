@@ -80,6 +80,7 @@ class SimulationEngine:
         self.traffic_density: str = "medium"
         self.pedestrian_density: str = "medium"
         self.emergency_mode: str = "disabled"
+        self.road_constraint: str = "None"
         self.lane_closure: bool = False
         self.accident: bool = False
         self.flooding: bool = False
@@ -117,6 +118,7 @@ class SimulationEngine:
             "traffic_density": "traffic_density",
             "pedestrian_density": "pedestrian_density",
             "emergency_mode": "emergency_mode",
+            "road_constraint": "road_constraint",
             "lane_closure": "lane_closure",
             "construction": "construction",
             "accident": "accident",
@@ -404,5 +406,6 @@ class SimulationEngine:
                 "traffic_density": self.traffic_density,
                 "pedestrian_density": self.pedestrian_density,
                 "emergency_mode": self.emergency_mode,
+                "road_constraint": self.road_constraint,
             },
         }

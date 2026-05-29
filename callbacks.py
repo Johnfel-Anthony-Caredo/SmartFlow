@@ -249,10 +249,11 @@ def register_callbacks(app):
         Input('btn-apply-scenario', 'n_clicks'),
         [State('traffic-density-dropdown', 'value'),
          State('pedestrian-density-dropdown', 'value'),
-         State('emergency-vehicle-dropdown', 'value')],
+         State('emergency-vehicle-dropdown', 'value'),
+         State('road-constraint-dropdown', 'value')],
         prevent_initial_call=True
     )
-    def apply_scenario(n, traffic, pedestrian, emergency):
+    def apply_scenario(n, traffic, pedestrian, emergency, road_constraint):
         if not n:
             return no_update
         density_map = {'Very High': 'heavy', 'High': 'heavy', 'Medium': 'medium', 'Low': 'low', 'None': 'none'}
@@ -261,6 +262,7 @@ def register_callbacks(app):
             traffic_density=density_map.get(traffic, 'medium'),
             pedestrian_density=density_map.get(pedestrian, 'medium'),
             emergency_mode=emap.get(emergency, 'disabled'),
+            road_constraint=road_constraint or 'None',
         )
         return datetime.now().timestamp()
 

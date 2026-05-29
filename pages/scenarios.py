@@ -339,6 +339,7 @@ def _hidden_edit_fields():
         dcc.Input(id='scn-edit-density'),
         dcc.Input(id='scn-edit-pedestrian'),
         dcc.Input(id='scn-edit-emergency'),
+        dcc.Input(id='scn-edit-road-constraint'),
         dcc.Input(id='scn-lane-toggle'),
         dcc.Input(id='scn-lane-approach'),
         dcc.Input(id='scn-lane-lanes'),
@@ -398,6 +399,7 @@ def _build_detail_panel(scenario):
     density = scenario.get('traffic_density') or 'Medium'
     ped_density = scenario.get('pedestrian_density') or 'Medium'
     emergency = scenario.get('emergency_mode') or 'Disabled'
+    road_constraint = scenario.get('road_constraint') or 'None'
 
     return [
         html.Div(className='scenario-detail-header', children=[
@@ -447,6 +449,10 @@ def _build_detail_panel(scenario):
                         html.Div(className='scenario-detail-item', children=[
                             html.Span('Emergency Mode', className='detail-label'),
                             html.Span(emergency, className='detail-value'),
+                        ]),
+                        html.Div(className='scenario-detail-item', children=[
+                            html.Span('Road Constraint', className='detail-label'),
+                            html.Span(road_constraint, className='detail-value'),
                         ]),
                         html.Div(className='scenario-detail-item', children=[
                             html.Span('Created', className='detail-label'),
@@ -577,6 +583,7 @@ def _build_edit_panel(scenario):
         defaults = {
             'name': '', 'description': '',
             'density': 'Medium', 'pedestrian': 'Medium', 'emergency': 'Disabled',
+            'road_constraint': 'None',
             'lane_toggle': [], 'lane_app': 'north', 'lane_lanes': 1,
             'const_toggle': [], 'const_app': 'north', 'const_spd': 0.5,
             'acc_toggle': [], 'acc_app': 'north', 'acc_sev': 'major',
@@ -608,6 +615,7 @@ def _build_edit_panel(scenario):
             'density': s.get('traffic_density', 'Medium'),
             'pedestrian': s.get('pedestrian_density', 'Medium'),
             'emergency': s.get('emergency_mode', 'Disabled'),
+            'road_constraint': s.get('road_constraint', 'None'),
             'lane_toggle': ['enabled'] if lane_cfg.get('enabled') else [],
             'lane_app': lane_cfg.get('approach', 'north'),
             'lane_lanes': lane_cfg.get('lanes_closed', 1),
@@ -719,6 +727,20 @@ def _build_edit_panel(scenario):
                                 {'label': 'Enabled (1 Ambulance)', 'value': 'Enabled (1 Ambulance)'},
                                 {'label': 'Enabled (2 Vehicles)', 'value': 'Enabled (2 Vehicles)'},
                             ], fld('emergency', 'Disabled')),
+                        ]),
+                        html.Div(className='scenario-detail-item',
+                                 style={'gridColumn': '1 / -1'}, children=[
+                            html.Span('Road Constraint', className='detail-label'),
+                            _dd('scn-edit-road-constraint', [
+                                {'label': 'None', 'value': 'None'},
+                                {'label': 'Weight Limit', 'value': 'Weight Limit'},
+                                {'label': 'Height Restriction', 'value': 'Height Restriction'},
+                                {'label': 'One-Way', 'value': 'One-Way'},
+                                {'label': 'Narrow Road', 'value': 'Narrow Road'},
+                                {'label': 'School Zone', 'value': 'School Zone'},
+                                {'label': 'No Overtaking', 'value': 'No Overtaking'},
+                                {'label': 'Speed Bump', 'value': 'Speed Bump'},
+                            ], fld('road_constraint', 'None')),
                         ]),
                     ]),
                 ]),
@@ -1107,6 +1129,7 @@ def handle_selection_and_view(card_clicks, row_clicks, view_clicks,
                     traffic_density=source.get('traffic_density', 'Medium'),
                     pedestrian_density=source.get('pedestrian_density', 'Medium'),
                     emergency_mode=source.get('emergency_mode', 'Disabled'),
+                    road_constraint=source.get('road_constraint', 'None'),
                     lane_closure_config=source.get('lane_closure_config', '{}'),
                     construction_config=source.get('construction_config', '{}'),
                     accident_config=source.get('accident_config', '{}'),
@@ -1188,6 +1211,7 @@ def update_view_mode_toggle(mode):
      State('scn-edit-density', 'value'),
      State('scn-edit-pedestrian', 'value'),
      State('scn-edit-emergency', 'value'),
+     State('scn-edit-road-constraint', 'value'),
 
      State('scn-lane-toggle', 'value'),
      State('scn-lane-approach', 'value'),
@@ -1209,6 +1233,7 @@ def update_view_mode_toggle(mode):
     prevent_initial_call=True,
 )
 def handle_save_scenario(save_clicks, selected_id, name, desc, density, pedestrian, emergency,
+                          road_constraint,
                           lane_toggle, lane_app, lane_lanes,
                           const_toggle, const_app, const_spd,
                           acc_toggle, acc_app, acc_sev,
@@ -1272,6 +1297,7 @@ def handle_save_scenario(save_clicks, selected_id, name, desc, density, pedestri
             traffic_density=density,
             pedestrian_density=pedestrian,
             emergency_mode=emergency,
+            road_constraint=road_constraint,
             lane_closure_config=json.dumps(lane_cfg),
             construction_config=json.dumps(const_cfg),
             accident_config=json.dumps(acc_cfg),
@@ -1295,6 +1321,7 @@ def handle_save_scenario(save_clicks, selected_id, name, desc, density, pedestri
             traffic_density=density,
             pedestrian_density=pedestrian,
             emergency_mode=emergency,
+            road_constraint=road_constraint,
             lane_closure_config=json.dumps(lane_cfg),
             construction_config=json.dumps(const_cfg),
             accident_config=json.dumps(acc_cfg),
