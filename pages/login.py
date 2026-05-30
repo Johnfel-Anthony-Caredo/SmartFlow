@@ -18,16 +18,19 @@ def _auth_field(input_id, label, placeholder, input_type='text', auto_complete=N
     if auto_complete:
         input_props['autoComplete'] = auto_complete
 
+    children = [
+        html.Label(htmlFor=input_id, children=label),
+        html.Div(
+            className='auth-field-shell',
+            children=dcc.Input(**input_props)
+        )
+    ]
+    if hint:
+        children.append(html.Div(className='auth-field-hint', children=hint))
+
     return html.Div(
         className='auth-field form-group',
-        children=[
-            html.Label(htmlFor=input_id, children=label),
-            html.Div(
-                className='auth-field-shell',
-                children=dcc.Input(**input_props)
-            ),
-            html.Div(className='auth-field-hint', children=hint),
-        ]
+        children=children
     )
 
 
@@ -54,14 +57,6 @@ def layout():
                                                     html.Span('Traffic Intelligence', className='auth-brand-subline'),
                                                 ]
                                             ),
-                                        ]
-                                    ),
-                                    dcc.Link(
-                                        href='/dashboard',
-                                        className='auth-back-link',
-                                        children=[
-                                            html.Span('Open dashboard'),
-                                            html.I(className='fas fa-arrow-right'),
                                         ]
                                     ),
                                 ]
@@ -96,11 +91,11 @@ def layout():
                                 ]
                             ),
                             html.Div(
-                                className='auth-proof-row',
+                                className='auth-proof-row auth-proof-row-inline',
                                 children=[
-                                    html.Div(className='auth-proof-pill', children=[html.Span('SUMO'), html.Strong('Connected')]),
-                                    html.Div(className='auth-proof-pill', children=[html.Span('TraCI'), html.Strong('Live bridge')]),
-                                    html.Div(className='auth-proof-pill', children=[html.Span('RL'), html.Strong('Ready')]),
+                                    html.Div(className='auth-proof-inline-item', children=[html.Span('SUMO'), html.Strong('Connected')]),
+                                    html.Div(className='auth-proof-inline-item', children=[html.Span('TraCI'), html.Strong('Live bridge')]),
+                                    html.Div(className='auth-proof-inline-item', children=[html.Span('RL'), html.Strong('Ready')]),
                                 ]
                             ),
                         ]

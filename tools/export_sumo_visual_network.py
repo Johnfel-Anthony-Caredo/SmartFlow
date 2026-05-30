@@ -3,14 +3,19 @@
 from __future__ import annotations
 
 import json
+import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SUMO_DIR = ROOT / "sumo" / "intersection_1"
-SCOPE_PATH = SUMO_DIR / "main_intersection_scope.json"
 OUTPUT_PATH = ROOT / "assets" / "generated" / "visual_network.json"
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from simulation.sumo_config import SUMO_DIR, SUMO_SCOPE_PATH
+
+SCOPE_PATH = SUMO_SCOPE_PATH
 
 
 def _parse_shape(value: str | None) -> list[dict[str, float]]:

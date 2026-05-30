@@ -466,7 +466,7 @@ function createTrafficSignalMesh(signal) {
   const green = createLamp(0x22c55e, 0, 1.36, 0.84);
   group.add(red, yellow, green);
 
-  const kind = signal.id === '7900968103' || signal.id === '7900968104' ? 'major' : 'minor';
+  const kind = signal.kind || 'major';
   return { id: signal.id, kind, group, red, yellow, green };
 }
 

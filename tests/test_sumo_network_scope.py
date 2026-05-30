@@ -4,44 +4,56 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 
-SCOPE_PATH = Path("sumo/intersection_1/main_intersection_scope.json")
-ROUTES_PATH = Path("sumo/intersection_1/designed_routes.rou.xml")
-CONFIG_PATH = Path("sumo/intersection_1/inter.sumocfg")
+SCOPE_PATH = Path("sumo/Tagum_1/main_intersection_scope.json")
+ROUTES_PATH = Path("sumo/Tagum_1/tagum1.rou.xml")
+CONFIG_PATH = Path("sumo/Tagum_1/tagum1.sumocfg")
+NET_PATH = Path("sumo/Tagum_1/tagum1.net.xml")
 
 
 class TestSumoNetworkScope(unittest.TestCase):
     def test_scope_selects_one_main_intersection(self):
         scope = json.loads(SCOPE_PATH.read_text(encoding="utf-8"))
 
-        self.assertEqual(scope["mode"], "single_intersection")
-        self.assertEqual(
-            scope["controlled_tls_ids"],
-            ["7900968103", "7900968104", "7900968105", "7900968106"],
-        )
-        self.assertIn("1337657045#0", scope["route_edges"])
-        self.assertIn("-1337657045#3", scope["route_edges"])
-        self.assertNotIn("1337657045#5", scope["route_edges"])
-        self.assertNotIn("-1337657045#5", scope["route_edges"])
-        self.assertEqual(scope["visual_center"], {"x": 528.0, "y": 870.0})
-        self.assertEqual(scope["visual_radius_m"], 260.0)
+        self.assertEqual(scope["mode"], "tagum_j1_single_intersection")
+        self.assertEqual(scope["controlled_tls_ids"], ["J1"])
+        self.assertIn("-E2", scope["route_edges"])
+        self.assertIn("-E1", scope["route_edges"])
+        self.assertIn("E3", scope["route_edges"])
+        self.assertIn("E0", scope["route_edges"])
+        self.assertEqual(scope["visual_center"], {"x": -22.41, "y": 4.76})
+        self.assertEqual(scope["visual_radius_m"], 80.0)
 
-    def test_designed_routes_use_named_flows_instead_of_random_vehicle_list(self):
+    def test_tagum_routes_include_demands_pedestrians_and_two_ambulances(self):
         root = ET.parse(ROUTES_PATH).getroot()
-        route_ids = {route.get("id") for route in root.findall("route")}
-        flow_ids = {flow.get("id") for flow in root.findall("flow")}
-        vehicles = root.findall("vehicle")
+        flow_pairs = {(flow.get("from"), flow.get("to")) for flow in root.findall("flow")}
+        emergency_trips = [
+            trip
+            for trip in root.findall("trip")
+            if trip.get("type") == "Emergency"
+        ]
+        person_trips = root.findall(".//personTrip")
 
-        self.assertIn("west_to_east", route_ids)
-        self.assertIn("east_to_west", route_ids)
-        self.assertIn("north_to_south", route_ids)
-        self.assertIn("south_to_north", route_ids)
-        self.assertIn("emergency_west_to_east", route_ids)
-        self.assertIn("flow_west_to_east", flow_ids)
-        self.assertEqual(len(vehicles), 0)
+        self.assertIn(("E3", "-E0"), flow_pairs)
+        self.assertIn(("-E1", "-E0"), flow_pairs)
+        self.assertIn(("E0", "-E3"), flow_pairs)
+        self.assertEqual(len(emergency_trips), 2)
+        self.assertGreaterEqual(len(person_trips), 10)
 
-    def test_sumo_config_uses_designed_routes(self):
+    def test_sumo_config_uses_tagum_network_and_routes(self):
         text = CONFIG_PATH.read_text(encoding="utf-8")
-        self.assertIn('<route-files value="designed_routes.rou.xml"/>', text)
+        self.assertIn('<net-file value="tagum1.net.xml"/>', text)
+        self.assertIn('<route-files value="tagum1.rou.xml"/>', text)
+
+    def test_j1_tl_logic_uses_exactly_eighteen_link_states(self):
+        root = ET.parse(NET_PATH).getroot()
+        tl_logic = root.find(".//tlLogic[@id='J1']")
+        connections = root.findall(".//connection[@tl='J1']")
+        link_indexes = {int(connection.get("linkIndex")) for connection in connections}
+
+        self.assertIsNotNone(tl_logic)
+        self.assertEqual(link_indexes, set(range(18)))
+        for phase in tl_logic.findall("phase"):
+            self.assertEqual(len(phase.get("state")), 18)
 
 
 if __name__ == "__main__":

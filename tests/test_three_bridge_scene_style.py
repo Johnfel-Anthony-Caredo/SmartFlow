@@ -30,6 +30,11 @@ class TestThreeBridgeSceneStyle(unittest.TestCase):
         self.assertIn("constraintMarker", text)
         self.assertIn("signalRegistry", text)
 
+    def test_three_bridge_no_longer_hardcodes_legacy_tls_ids(self):
+        text = BRIDGE_PATH.read_text(encoding="utf-8")
+        self.assertNotIn("7900968103", text)
+        self.assertNotIn("7900968104", text)
+
     def test_callback_serializer_forwards_visual_state_to_three_bridge(self):
         text = Path("callbacks.py").read_text(encoding="utf-8")
         self.assertIn("'visual': state.get('visual', {})", text)

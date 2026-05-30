@@ -6,11 +6,10 @@ import traci
 from .sumo_config import (
     APPROACH_LANES,
     CHART_HISTORY_LIMIT,
+    CONTROLLED_TLS_IDS,
     DEFAULT_SCENARIO_NAME,
     DENSITY_SCALE,
     EVENT_LIMIT,
-    MAJOR_TLS_IDS,
-    MINOR_TLS_IDS,
     PEDESTRIAN_SAMPLE_LIMIT,
     PEDESTRIAN_ROUTE_TEMPLATES,
     PEDESTRIAN_SPAWN_INTERVALS,
@@ -326,12 +325,9 @@ class SumoSimulationEngine:
     def _apply_phase(self):
         if self.connection is None:
             return
-        major_state = TLS_STATE_MAP[self.phase]["major"]
-        minor_state = TLS_STATE_MAP[self.phase]["minor"]
-        for tls_id in MAJOR_TLS_IDS:
-            self.connection.trafficlight.setRedYellowGreenState(tls_id, major_state)
-        for tls_id in MINOR_TLS_IDS:
-            self.connection.trafficlight.setRedYellowGreenState(tls_id, minor_state)
+        state = TLS_STATE_MAP[self.phase]
+        for tls_id in CONTROLLED_TLS_IDS:
+            self.connection.trafficlight.setRedYellowGreenState(tls_id, state)
 
     def _refresh_state(self):
         if self.connection is None:
@@ -478,8 +474,17 @@ class SumoSimulationEngine:
         )
 
     def _assign_emergency_vehicles(self, departed_ids: list[str]):
+        declared_emergency_ids = {
+            vehicle_id
+            for vehicle_id in departed_ids
+            if self._is_declared_emergency_vehicle(vehicle_id)
+        }
+        for vehicle_id in declared_emergency_ids:
+            if vehicle_id not in self._emergency_vehicle_ids:
+                self._emergency_vehicle_ids.add(vehicle_id)
+                self._add_event("priority", f"Emergency vehicle detected: {vehicle_id}")
+
         if self.emergency_mode == "disabled":
-            self._emergency_vehicle_ids.clear()
             return
 
         max_active = 1
@@ -492,6 +497,19 @@ class SumoSimulationEngine:
             if vehicle_id not in self._emergency_vehicle_ids:
                 self._emergency_vehicle_ids.add(vehicle_id)
                 self._add_event("priority", f"Emergency vehicle detected: {vehicle_id}")
+
+    def _is_declared_emergency_vehicle(self, vehicle_id: str) -> bool:
+        if self.connection is None:
+            return False
+        try:
+            type_id = self.connection.vehicle.getTypeID(vehicle_id).lower()
+        except Exception:
+            type_id = ""
+        try:
+            vehicle_class = self.connection.vehicle.getVehicleClass(vehicle_id).lower()
+        except Exception:
+            vehicle_class = ""
+        return type_id == "emergency" or vehicle_class == "emergency"
 
     def _build_constraint_marker(self) -> dict:
         label = (self.road_constraint or "").strip()
@@ -508,17 +526,17 @@ class SumoSimulationEngine:
 
         normalized = label.lower()
         if self.lane_closure or "lane" in normalized:
-            x, y, edge_id, text = 640.0, 790.0, "1337657045#3", "Lane Closure"
+            x, y, edge_id, text = -18.0, 8.0, "-E1", "Lane Closure"
         elif self.accident or "accident" in normalized:
-            x, y, edge_id, text = 470.0, 910.0, "-1337657045#0", "Accident"
+            x, y, edge_id, text = -24.0, 2.0, "J1", "Accident"
         elif self.flooding or "flood" in normalized:
-            x, y, edge_id, text = 300.0, 740.0, "180970197#1", "Flooding"
+            x, y, edge_id, text = -28.0, -12.0, "E3", "Flooding"
         elif self.construction or "construct" in normalized:
-            x, y, edge_id, text = 650.0, 1010.0, "180969633#0", "Construction"
+            x, y, edge_id, text = -24.0, 18.0, "-E2", "Construction"
         elif self.temp_blockage or "block" in normalized:
-            x, y, edge_id, text = 540.0, 870.0, "1337657045#2", "Temporary Blockage"
+            x, y, edge_id, text = -30.0, 0.0, "E0", "Temporary Blockage"
         else:
-            x, y, edge_id, text = 640.0, 790.0, "1337657045#3", label or "Road Constraint"
+            x, y, edge_id, text = -24.0, 2.0, "J1", label or "Road Constraint"
 
         return {
             "active": True,

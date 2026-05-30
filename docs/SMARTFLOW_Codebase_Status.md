@@ -1,7 +1,7 @@
 # SMARTFLOW - Codebase Status
 
-**Generated:** 2026-05-29
-**Last Updated:** 2026-05-29
+**Generated:** 2026-05-30
+**Last Updated:** 2026-05-30
 **Project:** SMARTFLOW - AI-Driven Traffic Simulation and Signal Control Dashboard
 **Workspace:** `C:\Users\jhepo\Desktop\trapik2`
 
@@ -256,6 +256,18 @@ Current targeted coverage includes:
   - Verifies full-screen auth CSS markers
   - Verifies autofill styling fix
   - Verifies existing callback IDs stayed intact
+
+Additional test files are present (coverage varies by module):
+
+- `tests/test_admin_roles_helpers.py`
+- `tests/test_live_traffic_integration.py`
+- `tests/test_simulation_engine.py`
+- `tests/test_simulation_vehicles.py`
+- `tests/test_sumo_network_scope.py`
+- `tests/test_sumo_state_payload.py`
+- `tests/test_three_bridge_scene_style.py`
+- `tests/test_traffic_map_renderer.py`
+- `tests/test_traffic_map_styles.py`
 
 This is good targeted coverage for the current migration stage, but it is not yet full-system validation.
 

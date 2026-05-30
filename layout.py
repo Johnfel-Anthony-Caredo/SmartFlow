@@ -14,7 +14,6 @@ from datetime import datetime, timedelta
 
 import plotly.graph_objects as go
 from dash import dcc, html
-from components.traffic_map import build_traffic_map, build_traffic_map_legend
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -344,35 +343,10 @@ def create_simulation_view() -> html.Div:
                         ' LIVE',
                     ]),
                 ]),
-                html.Div(className='sim-view-toggle', children=[
-                    html.Button('3D View', id='btn-3d-view',
-                                className='toggle-btn active'),
-                    html.Button('Map View', id='btn-map-view',
-                                className='toggle-btn'),
-                ]),
             ]),
 
             # ── Viewport ────────────────────────────────────────────
             html.Div(id='sim-viewport', className='sim-viewport', children=[
-                html.Div(
-                    id='simulation-map-shell',
-                    className='simulation-map-shell',
-                    children=[
-                        html.Div(
-                            id='traffic-map-container',
-                            className='traffic-map-container',
-                            style={'display': 'none'},
-                            children=build_traffic_map(),
-                        ),
-                        html.Div(
-                            className='simulation-map-legend',
-                            children=[
-                                html.Div('Intersection operator map', className='simulation-map-label'),
-                                build_traffic_map_legend(),
-                            ],
-                        ),
-                    ],
-                ),
                 html.Div(
                     id='three-container',
                     className='three-container',
@@ -394,7 +368,7 @@ def create_simulation_view() -> html.Div:
                         ),
                     ],
                 ),
-                html.Div(id='simulation-map-overlays', className='simulation-map-overlays', children=[
+                html.Div(id='simulation-overlays', className='simulation-overlays', children=[
                     html.Div(className='sim-overlay overlay-top-left', children=[
                         html.Div('Intersection', className='overlay-label'),
                         html.Div('Tagum City — Pioneer Ave & Apokon Rd',

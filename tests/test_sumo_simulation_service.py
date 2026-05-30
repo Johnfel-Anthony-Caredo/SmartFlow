@@ -61,7 +61,16 @@ class TestSumoSimulationService(unittest.TestCase):
         self.assertGreaterEqual(state["metrics"]["step_count"], 3)
         self.assertIn(
             state["phase"],
-            {"NS_GREEN", "NS_YELLOW", "ALL_RED", "EW_GREEN", "EW_YELLOW"},
+            {
+                "WEST_GREEN",
+                "WEST_YELLOW",
+                "EAST_GREEN",
+                "EAST_YELLOW",
+                "NS_GREEN",
+                "NS_YELLOW",
+                "PED_GREEN",
+                "ALL_RED",
+            },
         )
 
         sim.stop()
@@ -117,8 +126,10 @@ class TestSumoSimulationService(unittest.TestCase):
             self.assertIn("emergency", state["vehicles"][0])
 
     def test_sumo_controller_uses_main_intersection_tls_only(self):
-        self.assertEqual(sumo_config.MAJOR_TLS_IDS, ("7900968103", "7900968104"))
-        self.assertEqual(sumo_config.MINOR_TLS_IDS, ("7900968105", "7900968106"))
+        self.assertEqual(sumo_config.CONTROLLED_TLS_IDS, ("J1",))
+        self.assertEqual(sumo_config.MAJOR_TLS_IDS, ("J1",))
+        self.assertEqual(sumo_config.MINOR_TLS_IDS, ())
+        self.assertTrue(all(len(state) == 18 for state in sumo_config.TLS_STATE_MAP.values()))
 
 
 if __name__ == "__main__":

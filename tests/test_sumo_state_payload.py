@@ -1,6 +1,6 @@
 import unittest
 
-from simulation.sumo_state import build_state_payload
+from simulation.sumo_state import build_state_payload, canonical_signal_states
 
 
 class TestSumoStatePayload(unittest.TestCase):
@@ -42,6 +42,12 @@ class TestSumoStatePayload(unittest.TestCase):
             },
         )
         self.assertNotIn("queue_by_approach", payload["metrics"])
+
+    def test_canonical_signal_states_support_j1_phase_names(self):
+        self.assertEqual(canonical_signal_states("WEST_GREEN"), ("green", "red"))
+        self.assertEqual(canonical_signal_states("EAST_YELLOW"), ("yellow", "red"))
+        self.assertEqual(canonical_signal_states("PED_GREEN"), ("green", "red"))
+        self.assertEqual(canonical_signal_states("ALL_RED"), ("red", "red"))
 
 
 if __name__ == "__main__":

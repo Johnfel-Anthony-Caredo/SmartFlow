@@ -40,11 +40,6 @@ PERMISSION_GROUPS = [
         ],
     ),
     (
-        'Live Traffic Monitoring',
-        'fas fa-traffic-light',
-        [('live-traffic', 'view', 'View Live Traffic Monitoring')],
-    ),
-    (
         'Performance Reports',
         'fas fa-chart-line',
         [('performance', 'view', 'View Performance Analytics Charts')],

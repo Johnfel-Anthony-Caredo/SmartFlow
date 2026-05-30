@@ -5,56 +5,48 @@ try:
 except ImportError:  # pragma: no cover - handled at runtime
     checkBinary = None
 
-
-SUMO_CONFIG_PATH = Path(__file__).resolve().parents[1] / "sumo" / "intersection_1" / "inter.sumocfg"
+ROOT = Path(__file__).resolve().parents[1]
+SUMO_DIR = ROOT / "sumo" / "Tagum_1"
+SUMO_CONFIG_PATH = SUMO_DIR / "tagum1.sumocfg"
+SUMO_NET_PATH = SUMO_DIR / "tagum1.net.xml"
+SUMO_ROUTE_PATH = SUMO_DIR / "tagum1.rou.xml"
+SUMO_SCOPE_PATH = SUMO_DIR / "main_intersection_scope.json"
 SUMO_STEP_LENGTH = 1.0
 
 PHASE_SEQUENCE = (
-    ("NS_GREEN", 82.0),
-    ("NS_YELLOW", 3.0),
-    ("ALL_RED", 5.0),
-    ("EW_GREEN", 5.0),
-    ("EW_YELLOW", 5.0),
+    ("WEST_GREEN", 25.0),
+    ("WEST_YELLOW", 10.0),
+    ("EAST_GREEN", 25.0),
+    ("EAST_YELLOW", 10.0),
+    ("NS_GREEN", 35.0),
+    ("NS_YELLOW", 10.0),
+    ("PED_GREEN", 20.0),
+    ("ALL_RED", 10.0),
 )
 
-MAJOR_TLS_IDS = (
-    "7900968103",
-    "7900968104",
-)
+CONTROLLED_TLS_IDS = ("J1",)
 
-MINOR_TLS_IDS = (
-    "7900968105",
-    "7900968106",
-)
+# Compatibility names used by the existing map renderer. Tagum_1 has one
+# controlled 18-link traffic light, so "major" maps directly to J1.
+MAJOR_TLS_IDS = CONTROLLED_TLS_IDS
+MINOR_TLS_IDS = ()
 
 TLS_STATE_MAP = {
-    "NS_GREEN": {
-        "major": "GGGGr",
-        "minor": "GGr",
-    },
-    "NS_YELLOW": {
-        "major": "yyyyr",
-        "minor": "yyr",
-    },
-    "ALL_RED": {
-        "major": "rrrrr",
-        "minor": "rrr",
-    },
-    "EW_GREEN": {
-        "major": "rrrrG",
-        "minor": "rrG",
-    },
-    "EW_YELLOW": {
-        "major": "rrrrr",
-        "minor": "rrr",
-    },
+    "WEST_GREEN": "rrrrrrrrrrGGGGrrrr",
+    "WEST_YELLOW": "rrrrrrrrrryyyyrrrr",
+    "EAST_GREEN": "rrrGGGGrrrrrrrrrrr",
+    "EAST_YELLOW": "rrryyyyrrrrrrrrrrr",
+    "NS_GREEN": "GGGrrrrGGGrrrrrrrr",
+    "NS_YELLOW": "yyyrrrryyyrrrrrrrr",
+    "PED_GREEN": "rrrrrrrrrrrrrrGGGG",
+    "ALL_RED": "rrrrrrrrrrrrrrrrrr",
 }
 
 APPROACH_LANES = {
-    "north": ("180969633#0_0",),
-    "south": ("-180970197#1_0",),
-    "east": ("-1337657045#3_0", "-1337657045#3_1"),
-    "west": ("1337657045#0_0", "1337657045#0_1"),
+    "north": ("-E2_1",),
+    "south": ("E3_1",),
+    "east": ("-E1_1", "-E1_2"),
+    "west": ("E0_1", "E0_2"),
 }
 
 DENSITY_SCALE = {
@@ -80,28 +72,33 @@ PEDESTRIAN_SPAWN_INTERVALS = {
 
 PEDESTRIAN_ROUTE_TEMPLATES = (
     {
-        "name": "west_to_north",
-        "from_edge": "1337657045#0",
-        "to_edge": "180969633#0",
+        "name": "west_to_south",
+        "from_edge": "E0",
+        "to_edge": "-E3",
     },
     {
-        "name": "north_to_east",
-        "from_edge": "180969633#0",
-        "to_edge": "-1337657045#3",
+        "name": "west_to_east",
+        "from_edge": "E0",
+        "to_edge": "E1",
     },
     {
-        "name": "east_to_south",
-        "from_edge": "-1337657045#3",
-        "to_edge": "-180970197#1",
+        "name": "north_to_south",
+        "from_edge": "-E2",
+        "to_edge": "-E3",
     },
     {
-        "name": "south_to_west",
-        "from_edge": "-180970197#1",
-        "to_edge": "1337657045#0",
+        "name": "east_to_west",
+        "from_edge": "-E1",
+        "to_edge": "-E0",
+    },
+    {
+        "name": "south_to_north",
+        "from_edge": "E3",
+        "to_edge": "E2",
     },
 )
 
-DEFAULT_SCENARIO_NAME = "Tagum City - SUMO Intersection"
+DEFAULT_SCENARIO_NAME = "Tagum City - J1 Main Intersection"
 
 
 def get_sumo_binary() -> str:

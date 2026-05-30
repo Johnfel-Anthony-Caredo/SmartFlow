@@ -2,9 +2,9 @@ from typing import Iterable
 
 
 def canonical_signal_states(phase: str) -> tuple[str, str]:
-    if phase == "NS_GREEN":
+    if phase in {"WEST_GREEN", "EAST_GREEN", "NS_GREEN", "PED_GREEN"}:
         return "green", "red"
-    if phase == "NS_YELLOW":
+    if phase in {"WEST_YELLOW", "EAST_YELLOW", "NS_YELLOW"}:
         return "yellow", "red"
     if phase == "EW_GREEN":
         return "red", "green"

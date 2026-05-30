@@ -8,7 +8,6 @@ from dash import callback, Output, Input, State, html, no_update, ctx
 from flask import session
 import plotly.graph_objects as go
 
-from components.traffic_map import build_traffic_map
 import services.simulation_service as sim
 import services.metrics_service as metrics_svc
 import services.scenario_service as scenario_svc
@@ -281,88 +280,6 @@ def register_callbacks(app):
 
     # ── CONTROL BUTTONS (dashboard) ───────────────────────────
     @app.callback(
-        Output('traffic-map-container', 'children'),
-        Input('sim-engine-tick', 'data'),
-        State('url', 'pathname'),
-        prevent_initial_call=False
-    )
-    def update_dashboard_traffic_map(_ts, pathname):
-        path = pathname.rstrip('/') if pathname else ''
-        if path != '/dashboard':
-            return no_update
-        return build_traffic_map(sim.get_state())
-
-    @app.callback(
-        [Output('lt-map-container', 'children'),
-         Output('lt-runtime-status', 'children'),
-         Output('lt-runtime-status', 'className'),
-         Output('lt-runtime-time', 'children'),
-         Output('lt-phase-name', 'children'),
-         Output('lt-phase-remaining', 'children'),
-         Output('lt-signal-state-list', 'children'),
-         Output('lt-scenario-overlay', 'children'),
-         Output('lt-vehicle-count', 'children'),
-         Output('lt-pedestrian-count', 'children'),
-         Output('lt-queue-count', 'children'),
-         Output('lt-wait-time', 'children'),
-         Output('lt-emergency-count', 'children'),
-         Output('lt-event-feed', 'children'),
-         Output('lt-traffic-flow-chart', 'figure'),
-         Output('lt-wait-time-chart', 'figure')],
-        Input('sim-engine-tick', 'data'),
-        State('url', 'pathname'),
-        prevent_initial_call=False
-    )
-    def update_live_traffic_page(_ts, pathname):
-        path = pathname.rstrip('/') if pathname else ''
-        if path != '/live-traffic':
-            return [no_update] * 16
-
-        state = sim.get_state()
-        metrics = state.get('metrics', {})
-        dashboard = state.get('dashboard', {})
-        charts = state.get('charts', {})
-        queues = state.get('queues', {})
-        phase = state.get('phase', 'NS_GREEN')
-        ns_state, ew_state = canonical_signal_states(phase)
-        status_children, status_class = _status_badge(state.get('status', 'stopped'))
-        constraint = state.get('visual', {}).get('constraint_marker', {})
-        constraint_text = constraint.get('label', 'No active disruption') if constraint.get('active') else 'No active disruption'
-
-        signal_rows = [
-            html.Div(className='lt-signal-state-row', children=[
-                html.Span('NS approaches'),
-                html.Strong(ns_state.title(), className=f'signal-{ns_state}'),
-            ]),
-            html.Div(className='lt-signal-state-row', children=[
-                html.Span('EW approaches'),
-                html.Strong(ew_state.title(), className=f'signal-{ew_state}'),
-            ]),
-        ]
-
-        traffic_history = charts.get('traffic_flow', [])
-        wait_history = charts.get('wait_time', [])
-        queue_history = charts.get('queue_length', [])
-        return (
-            build_traffic_map(state),
-            status_children,
-            status_class,
-            _format_elapsed(state.get('time', 0)),
-            phase.replace('_', ' '),
-            f"{int(state.get('phase_remaining', 0))}s",
-            signal_rows,
-            constraint_text,
-            str(state.get('vehicle_count', 0)),
-            str(state.get('pedestrian_count', 0)),
-            str(sum(int(value or 0) for value in queues.values())),
-            f"{metrics.get('avg_wait', 0)}s",
-            str(dashboard.get('emergency_active_count', 0)),
-            _build_event_items(state.get('events', []), class_prefix='lt-event', limit=12),
-            _build_traffic_flow_figure(traffic_history),
-            _build_wait_time_figure(wait_history, queue_history),
-        )
-
-    @app.callback(
         Output('sim-engine-tick', 'data', allow_duplicate=True),
         [Input('btn-start', 'n_clicks'),
          Input('btn-pause', 'n_clicks'),
@@ -542,15 +459,7 @@ def register_callbacks(app):
         import json
         state = sim.get_state()
         phase = state.get('phase', 'NS_GREEN')
-        ns_state, ew_state = 'red', 'red'
-        if phase == 'NS_GREEN':
-            ns_state, ew_state = 'green', 'red'
-        elif phase == 'NS_YELLOW':
-            ns_state, ew_state = 'yellow', 'red'
-        elif phase == 'EW_GREEN':
-            ns_state, ew_state = 'red', 'green'
-        elif phase == 'EW_YELLOW':
-            ns_state, ew_state = 'red', 'yellow'
+        ns_state, ew_state = canonical_signal_states(phase)
         payload = {
             'time': state.get('time', 0),
             'status': state.get('status', 'stopped'),
@@ -564,56 +473,6 @@ def register_callbacks(app):
             'scenario': state.get('scenario', {}),
         }
         return json.dumps(payload)
-
-    # ── VIEW TOGGLE (3D / Map) ────────────────────────────────
-    app.clientside_callback(
-        """
-        function(n_3d, n_map) {
-            const map = document.getElementById('traffic-map-container');
-            const c3d = document.getElementById('three-container');
-            if (!map || !c3d) {
-                return [
-                    'toggle-btn active',
-                    'toggle-btn',
-                    'sim-viewport',
-                    'simulation-map-shell',
-                    'simulation-map-overlays',
-                ];
-            }
-
-            const triggered = dash_clientside.callback_context.triggered_id;
-            if (triggered === 'btn-map-view') {
-                map.style.display = 'block';
-                c3d.style.display = 'none';
-                return [
-                    'toggle-btn',
-                    'toggle-btn active',
-                    'sim-viewport map-mode',
-                    'simulation-map-shell active',
-                    'simulation-map-overlays hidden',
-                ];
-            }
-            // Default or btn-3d-view
-            map.style.display = 'none';
-            c3d.style.display = 'block';
-            return [
-                'toggle-btn active',
-                'toggle-btn',
-                'sim-viewport',
-                'simulation-map-shell',
-                'simulation-map-overlays',
-            ];
-        }
-        """,
-        [Output('btn-3d-view', 'className'),
-         Output('btn-map-view', 'className'),
-         Output('sim-viewport', 'className'),
-         Output('simulation-map-shell', 'className'),
-         Output('simulation-map-overlays', 'className')],
-        [Input('btn-3d-view', 'n_clicks'),
-         Input('btn-map-view', 'n_clicks')],
-        prevent_initial_call=True
-    )
 
     # ── THREE.JS CLIENTSIDE — pipes JSON state into scene ────
     app.clientside_callback(
